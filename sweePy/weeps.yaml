@@ -13,32 +13,10 @@ basics:
     shift:
 
 GAs:
-  - dsmga2-tos-tff_max
-  - dsmga2-tos-tff_median
-  - dsmga2-tos-ttt_moG
-  - dsmga2-tos-ttf_cntG
-  - dsmga2-tos-fff
-  - dsmga2-tos-tft
-  - dsmga2-tos-ftf_moE
-  - dsmga2-tos-ftf_cntG
-  - dsmga2-tos-ttf_moG
-  - dsmga2-tos-ttt_cntE
-  - dsmga2-tos-ttf_cntE
-  #- dsmga2-tos-ftf_mfN
-  - dsmga2-tos-ttt_moE
-  - dsmga2-tos-ftt_moG
-  - dsmga2-tos-ttf_moE
-  - dsmga2-tos-ttt_cntG
-  - dsmga2-tos-ftt_moE
-  - dsmga2-tos-tff
-  - dsmga2-tos-ftf_moG
-  - dsmga2-tos-ftf_cntE
-  - dsmga2-tos-ftt_count
-  - dsmga2-tos-ftf_mfE
-  - dsmga2-tos-ftf_moN
-  - dsmga2-tos-fft_moG
-  - dsmga2-tos-ftf_mfG
-  #- dsmga2-tos-ftf_cntN
+  - TTT_MEAN_CE_S
+  - TTT_MEAN_CG_S
+  - TTT_MEAN_MOE_S
+  - TTT_MEAN_MOG_S
 
 paths:
     # path for output root directory (abs./rel.)
@@ -55,10 +33,6 @@ tunnables:
 miscs:
     # filter for logging (1=debug,2=info,3=warning,4=error,5=critical)
     log_level: 4
-
-
-
-
 
 
 #### GA specs ####
@@ -97,188 +71,30 @@ GAspecs:
 
   # -------------------------------- BEGIN MODE -------------------------------- #
   
-  dsmga2-tos-ttf_cntG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttf_cntG
+  TTT_MEAN_CE_S:
+    path: ../DSMGA-II_TOS
+    bin: TTT_MEAN_CE_S
     io: 
       <<: *DSMGA2-DEFAULT-IO  # declare placeholders
       stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-fff:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-fff
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-tft:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-tft
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_moE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_moE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_cntG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_cntG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttf_moG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttf_moG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttt_cntE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttt_cntE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttf_cntE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttf_cntE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_mfN:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_mfN
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttt_moE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttt_moE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftt_moG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftt_moG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttf_moE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttf_moE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttt_cntG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttt_cntG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ttt_moG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ttt_moG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftt_moE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftt_moE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-tff:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-tff
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_moG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_moG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_cntE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_cntE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftt_count:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftt_count
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_mfE:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_mfE
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_moN:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_moN
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-fft_moG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-fft_moG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_mfG:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_mfG
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  dsmga2-tos-ftf_cntN:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-ftf_cntN
-    io: 
-      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
-      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
-
-  # - dsmga2-tos-tff_max
-  # - dsmga2-tos-tff_median
-  # - dsmga2-tos-ttt_moG
   
-  dsmga2-tos-tff_max:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-tff_max
+  TTT_MEAN_CG_S:
+    path: ../DSMGA-II_TOS
+    bin: TTT_MEAN_CG_S
     io: 
       <<: *DSMGA2-DEFAULT-IO  # declare placeholders
       stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
 
-  dsmga2-tos-tff_median:
-    path: ../dsmga2-tos
-    bin: dsmga2-tos-tff_median
+  TTT_MEAN_MOE_S:
+    path: ../DSMGA-II_TOS
+    bin: TTT_MEAN_MOE_S
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  TTT_MEAN_MOG_S:
+    path: ../DSMGA-II_TOS
+    bin: TTT_MEAN_MOG_S
     io: 
       <<: *DSMGA2-DEFAULT-IO  # declare placeholders
       stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
