@@ -158,7 +158,7 @@ def weep(fffff, ell, inst_num, sch, GAname):
 
 
 def weeps():
-    sch = Scheduler()
+    sch = Scheduler(63)
 
     threads_dic = {}
     results_dic = {}
