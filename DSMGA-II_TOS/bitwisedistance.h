@@ -1,4 +1,3 @@
-
 #ifndef _BITWISEDISTANCE_H_
 #define _BITWISEDISTANCE_H_
 

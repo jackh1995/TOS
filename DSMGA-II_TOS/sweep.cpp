@@ -11,6 +11,7 @@
 #include "statistics.h"
 #include "dsmga2.h"
 #include "global.h"
+
 #define MAX_GEN 200
 
 int step = 30;
@@ -23,57 +24,58 @@ struct Record {
     double gen;
 };
 
-
-
 int main (int argc, char *argv[]) {
 
-    if (argc != 4 && argc!=5 && argc !=6 && argc != 7) {
-        printf ("sweep ell numConvergence function(0~3)\n");
-        printf ("sweep ell numConvergence 4 [step #] [nk problem #]\n");
-        printf ("sweep ell numConvergence 5 [spin problem #]\n");
-        printf ("sweep ell numConvergence 6 [sat problem #]\n");
+    if (argc != 5 && argc!=6 && argc !=7 && argc != 8) {
+        printf ("sweep ell numConvergence function(0~3) [seed]\n");
+        printf ("sweep ell numConvergence 4 [step #] [nk problem #] [seed]\n");
+        printf ("sweep ell numConvergence 5 [spin problem #] [seed]\n");
+        printf ("sweep ell numConvergence 6 [maxsat problem #] [seed]\n");
+        printf ("sweep ell numConvergence 7 [maxcut problem #] [seed]\n");
         printf ("function: \n");
         printf ("     ONEMAX:  0\n");
         printf ("     MK    :  1\n");
         printf ("     FTRAP :  2\n");
         printf ("     CYC   :  3\n");
-        printf ("     NK    :  4\n");
-        printf ("     SPIN  :  5\n");
-        printf ("     SAT   :  6\n");
+        printf ("     NK    :  4 (50, 100, 200, 400)      0-based\n");
+        printf ("     SPIN  :  5 (36, 100, 196, 400, 784) 1-based\n");
+        printf ("     MAXSAT:  6 (20, 50, 75, 100, 200)   1-based\n");
+        printf ("     MAXCUT:  7 (50, 75, 100)            1-based\n");
         return -1;
     }
 
     int ell = atoi (argv[1]);
-    int numConvergence = atoi (argv[2]); // problem size
+    int numConvergence = atoi (argv[2]);
     int fffff = atoi(argv[3]);
+    int seed = -1;
 
     int problemNum = 0;
     int neighborNum = 0;
     int stepNum = 0;
 
-
+    if (fffff == 0 || fffff == 1 || fffff == 2 || fffff == 3) {
+        seed = atoi (argv[4]);
+    }
+    
     if (fffff == 4) {
         neighborNum = 4;
         stepNum = atoi (argv[4]);
         problemNum = atoi (argv[5]);
+        seed = atoi (argv[6]);
     }
 
-    if (fffff == 5 || fffff == 6) {
+    if (fffff == 5 || fffff == 6 || fffff == 7) {
         problemNum = atoi (argv[4]);
+        seed = atoi (argv[5]);
     }
-
 
     int nInitial = 10;
-
-
-    // for debug
-    // myRand.seed(123);
-
 
     Statistics st;
 
     Statistics stGen, stLS, stNFE;
 
+    myRand.seed((unsigned long)seed);
 
     if (fffff == 5) {
 	char filename[200];
@@ -98,6 +100,15 @@ int main (int argc, char *argv[]) {
         loadSAT(filename, &mySAT);
     }
 
+    if (fffff == 7) {
+        char filename[200];
+        char opt_filename[200];
+        sprintf(filename, "./maxcut/w05_%d/w05_%d.%d", ell, ell, problemNum);
+        sprintf(opt_filename, "./maxcut/g_w05_%d/g_w05_%d.%d", ell, ell, problemNum);
+        if (SHOW_BISECTION) printf("Loading: %s\n", filename);
+        if (SHOW_BISECTION) printf("Loading groundtruth: %s\n", opt_filename);
+        loadMAXCUT(filename, opt_filename, &myMAXCUT);
+    }
 
     bool foundOptima;
     Record rec[3];
@@ -114,6 +125,10 @@ int main (int argc, char *argv[]) {
         popu = rec[i].n;
 
         if (SHOW_BISECTION) printf("[%d]: ", popu);
+        if (SHOW_MP) {
+            printf("[%d/%d] ", seed, popu);
+            cout << flush;
+        }
 
         foundOptima = true;
 
@@ -124,10 +139,10 @@ int main (int argc, char *argv[]) {
         for (int j=0; j<numConvergence; j++) {
 
             DSMGA2 ga(ell, popu, MAX_GEN, -1, fffff);
-            ga.doIt(false);
+            ga.doIt();
 
             stGen.record(ga.getGeneration());
-            stNFE.record(Chromosome::hitnfe);
+            stNFE.record(Chromosome::nfe);
             stLS.record(Chromosome::lsnfe);
 
 
@@ -148,7 +163,6 @@ int main (int argc, char *argv[]) {
             }
         }
 
-
         rec[i].gen = stGen.getMean();
 
         if (!foundOptima)
@@ -168,14 +182,18 @@ int main (int argc, char *argv[]) {
         popu = rec[1].n;
 
         if (SHOW_BISECTION) printf("[%d]: ", popu);
+        if (SHOW_MP) {
+            printf("[%d/%d] ", seed, popu);
+            cout << flush;
+        }
 
         for (int j=0; j<numConvergence; j++) {
 
             DSMGA2 ga(ell, popu, MAX_GEN, -1, fffff);
-            ga.doIt(false);
+            ga.doIt();
 
             stGen.record(ga.getGeneration());
-            stNFE.record(Chromosome::hitnfe);
+            stNFE.record(Chromosome::nfe);
             stLS.record(Chromosome::lsnfe);
 
 
@@ -214,6 +232,10 @@ int main (int argc, char *argv[]) {
         popu = rec[2].n + step;
 
         if (SHOW_BISECTION) printf("[%d]: ", popu);
+        if (SHOW_MP) {
+            printf("[%d/%d] ", seed, popu);
+            cout << flush;
+        }
 
         foundOptima = true;
 
@@ -224,10 +246,10 @@ int main (int argc, char *argv[]) {
         for (int j=0; j<numConvergence; j++) {
 
             DSMGA2 ga(ell, popu, MAX_GEN, -1, fffff);
-            ga.doIt(false);
+            ga.doIt();
 
             stGen.record(ga.getGeneration());
-            stNFE.record(Chromosome::hitnfe);
+            stNFE.record(Chromosome::nfe);
             stLS.record(Chromosome::lsnfe);
 
 
@@ -277,7 +299,7 @@ int main (int argc, char *argv[]) {
         for (int j=0; j<numConvergence; j++) {
 
             DSMGA2 ga(ell, q1.n, MAX_GEN, -1, fffff);
-            ga.doIt(false);
+            ga.doIt();
 
             if (!ga.foundOptima()) {
                 foundOptima = false;
@@ -297,7 +319,7 @@ int main (int argc, char *argv[]) {
                 stNFE.reset();
             }
             stGen.record(ga.getGeneration());
-            stNFE.record(Chromosome::hitnfe);
+            stNFE.record(Chromosome::nfe);
             stLS.record(Chromosome::lsnfe);
         }
 
@@ -320,7 +342,7 @@ int main (int argc, char *argv[]) {
         for (int j=0; j<numConvergence; j++) {
 
             DSMGA2 ga(ell, q3.n, MAX_GEN, -1, fffff);
-            ga.doIt(false);
+            ga.doIt();
 
             if (!ga.foundOptima()) {
                 foundOptima = false;
@@ -340,7 +362,7 @@ int main (int argc, char *argv[]) {
                 stNFE.reset();
             }
             stGen.record(ga.getGeneration());
-            stNFE.record(Chromosome::hitnfe);
+            stNFE.record(Chromosome::nfe);
             stLS.record(Chromosome::lsnfe);
         }
 
@@ -364,17 +386,87 @@ int main (int argc, char *argv[]) {
         }
     };
 
-
-
     if (fffff == 4)
         freeNKWAProblem(&nkwa);
 
-    printf("population: %d\n", rec[1].n);
-    printf("generation: %f\n", rec[1].gen);
-    printf("NFE: %f\n", rec[1].nfe);
+    /* -------------------------------------------------------------------------- */
+    /*                                 cout result                                */
+    /* -------------------------------------------------------------------------- */
+    
+    
+    cout << endl;
+    cout << "--------------------------------------------------------------------------" << endl;
+    cout << "seed " << seed << " done ";
+    printf("pop=[%d] gen=[%f] nfe=[%f]\n", rec[1].n, rec[1].gen, rec[1].nfe);
+    cout << "--------------------------------------------------------------------------" << endl;
+    // printf("population: %d\n", rec[1].n);
+    // printf("generation: %f\n", rec[1].gen);
+    // printf("NFE: %f\n", rec[1].nfe);
 
+    /* -------------------------------------------------------------------------- */
+    /*                               Write to files                               */
+    /* -------------------------------------------------------------------------- */
+    
+    std::ofstream outfile;
+    string filename;
+    
+    string mode;
+    if ((USE_ADAMEAN) && (USE_MOILS) && (USE_HAMMING)) {
+        mode = "ttt";
+    } else if ((!USE_ADAMEAN) && (USE_MOILS) && (USE_HAMMING)) {
+        mode = "ftt";
+    } else if ((USE_ADAMEAN) && (!USE_MOILS) && (USE_HAMMING)) {
+        mode = "tft";
+    } else if ((USE_ADAMEAN) && (USE_MOILS) && (!USE_HAMMING)) {
+        mode = "ttf";
+    } else if ((!USE_ADAMEAN) && (!USE_MOILS) && (USE_HAMMING)) {
+        mode = "fft";
+    } else if ((USE_ADAMEAN) && (!USE_MOILS) && (!USE_HAMMING)) {
+        mode = "tff";
+    } else if ((!USE_ADAMEAN) && (USE_MOILS) && (!USE_HAMMING)) {
+        mode = "ftf";
+    } else {
+        mode = "fff";
+    }
+    
+    mode = "-" + mode;
+
+    switch(fffff) {
+        case 0:
+            filename = "./experiment/results/onemax" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 1:
+            filename = "./experiment/results/mktrap" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 2:
+            filename = "./experiment/results/ftrap" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 3:
+            filename = "./experiment/results/cyctrap" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 4:
+            filename = "./experiment/results/nks1-" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 5:
+            filename = "./experiment/results/spin" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 6:
+            filename = "./experiment/results/maxsat" + std::to_string(ell) + mode + ".csv";
+            break;
+        case 7:
+            filename = "./experiment/results/maxcut" + std::to_string(ell) + mode + ".csv";
+            break;
+        default:
+            cerr << "Problem not defined";
+            return -1;
+    }
+
+    // cout << "Writing result to file " + filename << endl;
+    outfile.open(filename, std::ios_base::app);
+    outfile << rec[1].n << ',';
+    outfile << rec[1].gen << ',';
+    outfile << rec[1].nfe << '\n';
+    outfile.close();
 
     return EXIT_SUCCESS;
-
 }
-

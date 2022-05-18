@@ -10,10 +10,8 @@
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
 
-#define NDEBUG // for assert
 #include <cassert>
 #include <cmath>
-
 #include "myrand.h"
 #include "bitwisedistance.h"
 #include "spin.h"
@@ -22,15 +20,23 @@
 #include "zkey.h"
 #include "sat.h"
 #include "maxcut.h"
-
-//#define EPSILON (1e-6)
+#include <unordered_map>
+#include "color.h"
+#include <string>
 #define EPSILON (1e-8)
 #define INF (1e10)
+
+/* ----------------------------- global settings ---------------------------- */
+
+#ifdef SIMILARITY_CHECK
+extern bool USE_HAMMING;
+#endif
 
 extern bool GHC;
 extern bool SELECTION;
 extern bool CACHE;
 extern bool SHOW_BISECTION;
+extern bool SHOW_MP;
 
 extern char outputFilename[100];
 extern void gstop ();
@@ -43,7 +49,6 @@ extern BitwiseDistance myBD;
 extern SPINinstance mySpinGlassParams;
 extern SATinstance mySAT;
 extern MAXCUTinstance myMAXCUT;
-
 extern NKWAProblem nkwa;
 
 inline int quotientLong(int a) {
@@ -87,5 +92,32 @@ inline double metric(double p00, double p01, double p10, double p11) {
 inline double square(double a) {
     return a*a;
 }
+
+enum Problem { onemax,
+             mktrap,
+             ftrap,
+             cyctrap,
+             nk,
+             spin,
+             maxsat,
+             maxcut };
+
+enum Verbosity {
+    NO,
+    COMPACT,
+    POPULATION,
+    RM
+};
+extern Verbosity verbose;
+
+static std::unordered_map<std::string, Problem> const Problem_table = { 
+    {"onemax", Problem::onemax}, 
+    {"mktrap", Problem::mktrap},
+    {"ftrap", Problem::ftrap},
+    {"cyctrap", Problem::cyctrap},
+    {"spin", Problem::spin},
+    {"nk", Problem::nk},
+    {"maxsat", Problem::maxsat},
+    {"maxcut", Problem::maxcut}};
 
 #endif

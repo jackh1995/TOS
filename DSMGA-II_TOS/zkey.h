@@ -12,7 +12,6 @@ class ZKey {
 public:
     ZKey() {
         FILE *fp = fopen("zobristkey", "rb");
-        // fread(keys, sizeof(unsigned long), 1000, fp);
         (void)! fread(keys, sizeof(unsigned long), 1000, fp);
         fclose(fp);
     }
@@ -22,9 +21,7 @@ public:
     }
 
 protected:
-
     unsigned long keys[1000];
-
 };
 
 #endif

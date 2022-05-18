@@ -22,7 +22,7 @@ SRC = $(SRC1) $(SRC2) $(SRC3)
 
 SRC1 = chromosome.cpp dsmga2.cpp fastcounting.cpp global.cpp main.cpp mt19937ar.cpp myrand.cpp spin.cpp nk-wa.cpp sat.cpp maxcut.cpp
 
-SRC2 = chromosome.cpp dsmga2.cpp fastcounting.cpp global.cpp sweep.cpp mt19937ar.cpp myrand.cpp spin.cpp nk-wa.cpp sat.cpp maxcut.cpp
+SRC2 = chromosome.cpp dsmga2.cpp fastcounting.cpp global.cpp mt19937ar.cpp myrand.cpp spin.cpp nk-wa.cpp sat.cpp maxcut.cpp # sweep.cpp
 
 SRC3 = genZobrist.cpp
 
@@ -32,13 +32,13 @@ OBJ1 = $(addsuffix .o, $(basename $(SRC1)))
 OBJ2 = $(addsuffix .o, $(basename $(SRC2)))
 OBJ3 = $(addsuffix .o, $(basename $(SRC3)))
 
-all: DSMGA2 sweep genZobrist
+all: DSMGA2 genZobrist # sweep
 
 DSMGA2: $(OBJ1)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ1)
 
-sweep: $(OBJ2) DSMGA2
-	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ2)
+# sweep: $(OBJ2) DSMGA2
+# 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ2)
 
 genZobrist: $(OBJ3)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ3)
@@ -79,9 +79,9 @@ fastcounting.o: global.h myrand.h mt19937ar.h bitwisedistance.h spin.h
 fastcounting.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h fastcounting.h maxcut.h
 global.o: myrand.h mt19937ar.h statistics.h doublelinkedlistarray.h zkey.h
 global.o: chromosome.h global.h bitwisedistance.h spin.h nk-wa.h sat.h maxcut.h
-sweep.o: statistics.h dsmga2.h chromosome.h global.h myrand.h mt19937ar.h
-sweep.o: bitwisedistance.h spin.h nk-wa.h doublelinkedlistarray.h
-sweep.o: zkey.h sat.h trimatrix.h fastcounting.h maxcut.h
+# sweep.o: statistics.h dsmga2.h chromosome.h global.h myrand.h mt19937ar.h
+# sweep.o: bitwisedistance.h spin.h nk-wa.h doublelinkedlistarray.h
+# sweep.o: zkey.h sat.h trimatrix.h fastcounting.h maxcut.h
 myrand.o: myrand.h mt19937ar.h
 spin.o: global.h myrand.h mt19937ar.h bitwisedistance.h spin.h
 spin.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h
