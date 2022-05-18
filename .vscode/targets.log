@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed May 18 13:27:47 2022
+# Make data base, printed on Wed May 18 17:48:52 2022
 
 # Variables
 
@@ -167,7 +167,7 @@ XDG_RUNTIME_DIR = /run/user/1003
 # environment
 _CE_M = 
 # environment
-VSCODE_IPC_HOOK_CLI = /run/user/1003/vscode-ipc-c627b5eb-c23e-453f-aed4-488ecfc0b015.sock
+VSCODE_IPC_HOOK_CLI = /run/user/1003/vscode-ipc-de8f097f-59eb-4c25-831a-216951528f25.sock
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -261,6 +261,6 @@ GNUmakefile:
 # strcache performance: lookups = 24 / hit rate = 12%
 # hash-table stats:
 # Load=21/8192=0%, Rehash=0, Collisions=0/24=0%
-# Finished Make data base on Wed May 18 13:27:47 2022
+# Finished Make data base on Wed May 18 17:48:52 2022
 
  

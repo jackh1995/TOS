@@ -42,11 +42,25 @@ DSMGA2::DSMGA2(int _ell, int _nInitial, int _maxGan, int _maxFe, int fffff) :
     orderRM(new int[nCurrent])
 
     #ifdef TRIMMING
+    #ifdef MEAN
     ,rm_success_sizes_mean(_ell/2)
+    #endif
+    #ifdef MEDIAN
+    ,rm_success_sizes_median(_ell/2)
+    #endif
+    #ifdef MAX
+    ,rm_success_sizes_max(_ell/2)
+    #endif
     #endif
  
     #ifdef ORDERING
     ,orderILS(_ell/2) 
+    #endif
+
+    #ifdef ORDERING
+    #ifdef COUNTING
+    ,rm_success_sizes_count(_ell/2)
+    #endif
     #endif
     
     {
@@ -83,6 +97,10 @@ DSMGA2::DSMGA2(int _ell, int _nInitial, int _maxGan, int _maxFe, int fffff) :
     
     #ifdef ORDERING
     iota(orderILS.begin(), orderILS.end(), 0);
+    #ifdef COUNTING
+    for (int i = 0; i < ell/2; i++)
+        rm_success_sizes_count[i] = 0;
+    #endif
     #endif
     
     /* -------------------------- GREEDY HILL CLIMBING -------------------------- */
@@ -134,7 +152,9 @@ void DSMGA2::oneRun() {
     mixing();
     
     #ifdef ORDERING
+    #ifdef GENERATION_RESTART
     reset_orderILS();
+    #endif
     #endif
     
     double max = -INF;
@@ -611,6 +631,12 @@ void DSMGA2::mixing() {
     // k epochs
     for (int k = 0; k < repeat; ++k) {
         
+        #ifdef ORDERING
+        #ifdef EPOCH_RESTART
+        reset_orderILS();
+        #endif
+        #endif
+        
         genOrderRM();
 
         for (int i = 0; i < nCurrent/2; ++i) {
@@ -625,17 +651,39 @@ void DSMGA2::mixing() {
             break;
     
         #ifdef TRIMMING
+
+        #ifdef MEAN
         if (!rm_success_sizes.empty()){
-        
-        size_t sum(0);
-        vector<int>::iterator it;
-        
-        for (it = rm_success_sizes.begin(); it != rm_success_sizes.end(); ++it){
-            sum += (*it);
+            size_t sum(0);
+            vector<int>::iterator it;
+            for (it = rm_success_sizes.begin(); it != rm_success_sizes.end(); ++it){
+                sum += (*it);
+            }
+            rm_success_sizes_mean = sum / rm_success_sizes.size() + 1;
         }
-        
-        rm_success_sizes_mean = sum / rm_success_sizes.size() + 1;
+        #endif
+
+        #ifdef MEDIAN
+        if (!rm_success_sizes.empty()){
+            size_t n = rm_success_sizes.size() / 2;
+            nth_element(rm_success_sizes.begin(), rm_success_sizes.begin()+n, rm_success_sizes.end());
+            rm_success_sizes_median = rm_success_sizes[n];
         }
+        #endif
+
+        #ifdef MAX
+        if (!rm_success_sizes.empty()){
+            rm_success_sizes_max = 0;
+            vector<int>::iterator it;
+            for (it = rm_success_sizes.begin(); it != rm_success_sizes.end(); ++it){
+                if ((*it) > rm_success_sizes_max){
+                    rm_success_sizes_max = (*it);
+                }
+            }
+            rm_success_sizes.clear();
+        }
+        #endif
+
         #endif
 
         for (int i=nCurrent/2; i<nCurrent; ++i) {
@@ -796,7 +844,15 @@ void DSMGA2::restrictedMixing(Chromosome &ch) {
         size_max = ell/2;
     } else {
         if (ch.getTrim()) {
+            #ifdef MEAN
             size_max = rm_success_sizes_mean;
+            #endif
+            #ifdef MEDIAN
+            size_max = rm_success_sizes_median;
+            #endif
+            #ifdef MAX
+            size_max = rm_success_sizes_max;
+            #endif
         }
         else {
             size_max = ell/2;
@@ -1025,24 +1081,50 @@ void DSMGA2::print_orderILS(void) const {
 
 void DSMGA2::reset_orderILS(void) {
     std::iota(orderILS.begin(), orderILS.end(), 0);
+    #ifdef COUNTING 
+    for (int i = 0; i < ell/2; i++)
+        rm_success_sizes_count[i] = 0;
+    #endif
 }
 
 void DSMGA2::update_orderILS(size_t lastUB) {
 
+    #ifdef MOVING_ONE
     int last_UB_idx(0);
-    
     for (int idx=0; idx!=ell/2; ++idx) {
         if (orderILS[idx] == (int(lastUB)-1)) {
             last_UB_idx = idx;
             break;
         }
     }
-
     if (last_UB_idx == 0) {
         return;
     }
+    swap(orderILS[last_UB_idx-1], orderILS[last_UB_idx]); // moving one
+    #endif
 
-    swap(orderILS[last_UB_idx-1], orderILS[last_UB_idx]);
+    #ifdef MOVING_FRONT
+    int last_UB_idx(0);	
+    for (int idx=0; idx!=ell/2; ++idx) {	
+        if (orderILS[idx] == (int(lastUB)-1)) {	
+            last_UB_idx = idx;	
+            break;	
+        }	
+    }	
+    if (last_UB_idx == 0) {	
+        return;	
+    }	
+    swap(orderILS[0], orderILS[last_UB_idx]); // moving front
+    #endif
+
+    #ifdef COUNTING
+    // reorder ils based on the count for each size
+    ++rm_success_sizes_count[lastUB-1];
+    sort(orderILS.begin(), orderILS.end(),
+    [&](int A, int B) -> bool {
+        return rm_success_sizes_count[A] > rm_success_sizes_count[B];
+    });
+    #endif
 }
 #endif
 

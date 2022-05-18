@@ -3,9 +3,30 @@
  *   tianliyu@ntu.edu.tw                                                   *
  ***************************************************************************/
 
-#define TRIMMING
-#define ORDERING
-#define SIMILARITY_CHECK
+/* -------------------------------------------------------------------------- */
+
+// #define TRIMMING
+// #define MEDIAN
+// #define MEAN
+// #define MAX
+
+/* -------------------------------------------------------------------------- */
+
+// #define ORDERING
+
+// #define EPOCH_RESTART
+// #define GENERATION_RESTART
+
+// #define COUNTING
+// #define MOVING_ONE
+// #define MOVING_FRONT
+
+/* -------------------------------------------------------------------------- */
+
+// #define SIMILARITY_CHECK
+
+/* -------------------------------------------------------------------------- */
+
 
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
@@ -28,10 +49,7 @@
 
 /* ----------------------------- global settings ---------------------------- */
 
-#ifdef SIMILARITY_CHECK
 extern bool USE_HAMMING;
-#endif
-
 extern bool GHC;
 extern bool SELECTION;
 extern bool CACHE;

@@ -99,7 +99,15 @@ private:
     int *orderRM;
     void genOrderRM();
     #ifdef TRIMMING
+    #ifdef MEAN
     int rm_success_sizes_mean;
+    #endif
+    #ifdef MEDIAN
+    int rm_success_sizes_median;
+    #endif
+    #ifdef MAX
+    int rm_success_sizes_max;
+    #endif
     vector<int> rm_success_sizes;
     #endif
 
@@ -108,6 +116,9 @@ private:
     void print_orderILS(void) const;
     void reset_orderILS(void);
     void update_orderILS(size_t);
+    #ifdef COUNTING
+    vector<int> rm_success_sizes_count;
+    #endif
     #endif
     
     // [HAMMING]

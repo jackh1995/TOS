@@ -15,8 +15,11 @@
 #include "sat.h"
 #include "dsmga2.h"
 
+
 #ifdef SIMILARITY_CHECK
 bool USE_HAMMING = true;
+#else
+bool USE_HAMMING = false;
 #endif
 
 int maxMemory = 0;
