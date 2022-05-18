@@ -1,0 +1,322 @@
+basics:
+    # problem to test, full options are listed in the 'Fspecs' section below
+    fffff: spin 
+    # length of problem
+    ell: 100 
+    # maximum generation for GA
+    maxgen: 200
+    # maximum nfe for GA
+    maxnfe: -1
+    # instance number for instance based problem, blank for full test
+    instance: 
+    # shift amount for nk, 1 if unspecified
+    shift:
+
+GAs:
+  - dsmga2-tos-tff_max
+  - dsmga2-tos-tff_median
+  - dsmga2-tos-ttt_moG
+  - dsmga2-tos-ttf_cntG
+  - dsmga2-tos-fff
+  - dsmga2-tos-tft
+  - dsmga2-tos-ftf_moE
+  - dsmga2-tos-ftf_cntG
+  - dsmga2-tos-ttf_moG
+  - dsmga2-tos-ttt_cntE
+  - dsmga2-tos-ttf_cntE
+  #- dsmga2-tos-ftf_mfN
+  - dsmga2-tos-ttt_moE
+  - dsmga2-tos-ftt_moG
+  - dsmga2-tos-ttf_moE
+  - dsmga2-tos-ttt_cntG
+  - dsmga2-tos-ftt_moE
+  - dsmga2-tos-tff
+  - dsmga2-tos-ftf_moG
+  - dsmga2-tos-ftf_cntE
+  - dsmga2-tos-ftt_count
+  - dsmga2-tos-ftf_mfE
+  - dsmga2-tos-ftf_moN
+  - dsmga2-tos-fft_moG
+  - dsmga2-tos-ftf_mfG
+  #- dsmga2-tos-ftf_cntN
+
+paths:
+    # path for output root directory (abs./rel.)
+    root_dir: ../out_dir
+
+tunnables:
+    # required number of consecutive solves to be successful
+    repeat: 10
+    # number of consecutive increases for termination of phase 1 sweeping
+    stop_after: 3
+    # time to wait after an unsuccessful polling
+    sleep_time: 1
+
+miscs:
+    # filter for logging (1=debug,2=info,3=warning,4=error,5=critical)
+    log_level: 4
+
+
+
+
+
+
+#### GA specs ####
+
+##########################################################################
+# IMPORTANT : the keywords 'pop', 'instance', 'shift' is reserved for    #
+#             population size, instance number, shift (all non-optinal)  #
+#             and MUST be contained in all GA specifications.            #
+##########################################################################
+
+GAspecs:
+  Original: &DSMGA2-DEFAULT-SPEC
+    path: '../backup_code/DSMGA-II-TwoEdge'
+    bin: DSMGA2
+    io: &DSMGA2-DEFAULT-IO  # declare placeholders
+      argv: 'ell pop problem_id maxgen maxnfe repeat display rand_seed'
+      stdout: "\ngen  nfe  lsnfe failnum"
+      fixed_fields:
+        repeat    :  1
+        display   :  0
+        rand_seed : -1
+      mappings:
+      - from: fffff
+        to: problem_id
+        map: &DSMGA2-DEFAULT-FFFFF-MAPPING
+          mktrap  :  1
+          ftrap   :  2
+          cyctrap :  3
+          nk      :  4
+          spin    :  5
+          sat     :  6
+          maxcut  :  7
+      envs: &DSMGA2-DEFAULT-ENVS
+        DSMGA2_INSTANCE_NUMBER: instance
+        DSMGA2_SHIFT: shift
+
+  # -------------------------------- BEGIN MODE -------------------------------- #
+  
+  dsmga2-tos-ttf_cntG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttf_cntG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-fff:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-fff
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-tft:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-tft
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_moE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_moE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_cntG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_cntG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttf_moG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttf_moG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttt_cntE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttt_cntE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttf_cntE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttf_cntE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_mfN:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_mfN
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttt_moE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttt_moE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftt_moG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftt_moG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttf_moE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttf_moE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttt_cntG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttt_cntG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ttt_moG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ttt_moG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftt_moE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftt_moE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-tff:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-tff
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_moG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_moG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_cntE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_cntE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftt_count:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftt_count
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_mfE:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_mfE
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_moN:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_moN
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-fft_moG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-fft_moG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_mfG:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_mfG
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-ftf_cntN:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-ftf_cntN
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  # - dsmga2-tos-tff_max
+  # - dsmga2-tos-tff_median
+  # - dsmga2-tos-ttt_moG
+  
+  dsmga2-tos-tff_max:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-tff_max
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  dsmga2-tos-tff_median:
+    path: ../dsmga2-tos
+    bin: dsmga2-tos-tff_median
+    io: 
+      <<: *DSMGA2-DEFAULT-IO  # declare placeholders
+      stdout: "\ngen nfe initnfe lsnfe rmnfe bmnfe"
+
+  # --------------------------------- END MODEL -------------------------------- #
+
+  
+  # Mod1:
+  #   path: '/path/to/src/dir'
+  #   bin: DSMGA2
+  #   io:
+  #     <<: *DSMGA2-DEFAULT-IO
+  #     mappings:
+  #     - from: fffff
+  #       to: problem_id
+  #       map:
+  #         <<: *DSMGA2-DEFAULT-FFFFF-MAPPING
+  #         extra1  :  7
+  #         extra2  :  8
+
+
+#### f specs ####
+Fspecs:
+    mktrap:
+        feasible_ell: "lambda ell: True if not ell%5 else False"
+    cyctrap:
+        feasible_ell: "lambda ell: True if not ell%4 else False"
+    ftrap:
+        feasible_ell: "lambda ell: True if not ell%6 else False"
+    nk:
+        feasible_ell: "lambda ell: True if ell in [100,200,400] else False"
+        instances: "range(100)"
+    spin:
+        feasible_ell: "lambda ell: True if ell in [100,196,400,784] else False"
+        instances: "range(1,100+1,1)"
+    sat:
+        feasible_ell: "lambda ell: True if ell in [20,50,100] else False"
+        instances: "range(1,1000+1,1)"
+    maxcut:
+        feasible_ell: "lambda ell: True if ell in [50, 75, 100] else False"
+        instances: "range(1,50+1,1)"

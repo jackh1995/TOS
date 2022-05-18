@@ -1,0 +1,280 @@
+#!/usr/bin/env python3
+
+from src.utils import *
+from src.io import *
+from src.scheduler import *
+
+import threading
+import time
+import numpy as np
+import os, signal
+import logging
+import yaml
+import functools
+import csv
+
+with open('weeps.yaml', 'r') as f:
+    configs = yaml.safe_load(f)
+
+ROOT_DIR = configs['paths']['root_dir']
+
+logging.basicConfig(
+        filename='weeps.log', filemode='w',
+        format='[%(levelname)s] %(asctime)s -- %(message)s',
+        datefmt='%H:%M:%S',
+        level=configs['miscs']['log_level'] * 10
+        )
+
+
+def weep(fffff, ell, inst_num, sch, GAname):
+    assert type(sch) is Scheduler, 'weep procedure is not assigned a proper scheduler'
+
+    raw_cmd = prefill_cmd(configs, GAname, instance = inst_num)  # will need to fill in popsize later
+    cwd = configs['GAspecs'][GAname]['path']
+    env = prefill_env(configs, GAname, instance = inst_num)
+
+    for mapping in configs['GAspecs'][GAname]['io']['mappings']:
+        if mapping['from'] == 'fffff':
+            dict_fffff_to_problemid = mapping['map']
+    problem_id = dict_fffff_to_problemid[fffff]
+
+    data = {}                    # pop,result pairs
+    job_arr = []                 # list of (pop,jid) tuples
+    wLock = threading.Lock()     # lock for critical sections among threads (particularly in phase 2)
+
+    best_nfe = np.inf
+    best_pop = None
+    solved = False
+
+
+    def trial_population(pop): # FIXME : ensure thread-safety
+        nonlocal data
+        nonlocal best_nfe
+        nonlocal best_pop
+
+        #results = []
+        out_dicts = []
+        for _ in range(configs['tunnables']['repeat']):
+            cmd = finalize_cmd(raw_cmd,pop)
+            jid = sch.queue(inst_num, cmd, cwd, env)
+            out_dict = sch.join(jid, functools.partial(parse_output, configs, GAname))
+
+            # FIXME: failed GA run should be included into results as well
+            if not out_dict: # fail
+                break
+            else:
+                out_dicts.append(out_dict)
+        
+        if len(out_dicts):
+            data[pop] = {key: np.mean([out_dict[key] for out_dict in out_dicts]) for key in out_dicts[0].keys()}
+            data[pop]['successes'] = len(out_dicts)
+
+        # CRITICAL : possible race condition
+        wLock.acquire()
+        if len(out_dicts) == 10 and data[pop]['nfe'] < best_nfe:
+            best_nfe = data[pop]['nfe']
+            best_pop = pop
+        wLock.release()
+
+
+        if len(out_dicts) < 10:
+            logging.info(f'{GAname} inst={inst_num} pop={pop} failed on attempt {len(out_dicts)}')
+        else:
+            logging.info(f'{GAname} inst={inst_num} pop={pop} successful')
+
+        return len(out_dicts) == 10
+
+    
+    ### phase 1 : stop after STOP_AFTER consecutive nfe increase or the current nfe reaches 2x the best nfe
+    def phase1_impl(init_pop):
+        nonlocal solved
+
+        current_pop = init_pop
+
+        # TODO : first STOP_AFTER trials can be executed parallely to further decr turnaround time
+        while True:
+            s = trial_population(current_pop)
+            solved = solved or s
+       
+            ''' break condition 1 : consider solves only '''
+            if s and data[current_pop]['nfe'] > 2 * best_nfe:
+                break
+
+            ''' break condition 1 : consider all '''
+            #if data[current_pop]['nfe'] > 2 * best_nfe:
+            #    break
+
+            ''' check moving average '''
+            if s and K_incr_in_mv_avg(data, configs['tunnables']['stop_after']):
+                break
+
+            current_pop += 30 # if loop continues
+
+
+    ### phase 2 : select successful pop with lowest nfe and search its neighborhood
+    def phase2_impl(range_obj):
+
+        threads = []
+        for pop in range_obj:
+            if pop == best_pop: # skip recalculation
+                continue
+            elif pop <= 0:  # disallow negative population sizes
+                continue
+
+            # create & start threads
+            thread = threading.Thread(target = trial_population, args=(pop,))
+            thread.start()
+            threads.append(thread)
+
+        for thread in threads: # wait for all threads to finish
+            thread.join()
+
+
+    phase1_impl(10)
+    phase2_impl(range(best_pop-25,best_pop+26,5))
+    phase2_impl(range(best_pop-4,best_pop+5,1))
+
+
+    ### done : print and write out the results
+
+    if inst_num < 0:
+        print(f'[{GAname}] {best_pop} {best_nfe}')
+    else:
+        print(f'[{GAname}] {inst_num} {best_pop} {best_nfe}')
+
+    # FIXME : ./DSMGA2 does not currently record revive count, which should also be monitored be dumped into txt
+    if inst_num is not None:
+        with open(os.path.join(ROOT_DIR,GAname,f'{problem_id}_{ell}_{inst_num}.csv'),'w') as f:
+            column_names = ['pop'] + list(data[best_pop].keys())
+
+            writer = csv.writer(f, delimiter='\t')
+            writer.writerow(column_names)
+
+            for pop in sorted(data.keys()):
+                writer.writerow([pop] + [data[pop][key] for key in data[pop].keys()])
+
+
+    return best_pop, data
+
+
+def weeps():
+    sch = Scheduler()
+
+    threads_dic = {}
+    results_dic = {}
+
+    fffff = configs['basics']['fffff']
+    ell = configs['basics']['ell']
+
+    for GAname in configs['GAs']:
+        # retrieve metadata for GA
+        try:
+            GAspec = configs['GAspecs'][GAname]
+        except Exception as e:
+            print(f'No corresponding configuration for GA named {GAname} in the yaml GAspecs')
+            exit()
+
+        # validty check
+        bin_path = os.path.join(GAspec['path'], GAspec['bin'])
+        out_path = os.path.join(ROOT_DIR, GAname)
+        os.makedirs(out_path,exist_ok=True) # create folder if non-existant
+
+        assert os.path.exists(bin_path), f'Binary cannot be located at the provided path "{bin_path}"'
+        
+        if fffff not in configs['Fspecs'].keys():
+            print(f'No corresponding configuration for problem named {fffff} in the yaml Fspecs')
+            exit()
+        
+        if 'feasible_ell' in configs['Fspecs'][fffff].keys():
+            ell_feasibility_check_func = eval(configs['Fspecs'][fffff]['feasible_ell'])
+            if not ell_feasibility_check_func(ell):
+                print(f'Infeasible ell for {fffff}')
+                exit()
+        else:
+            logging.warning(f'No ell feasibility checking provided for {fffff}, skipping...')
+
+        if 'instances' in configs['Fspecs'][fffff].keys():
+            taskiter = eval(configs['Fspecs'][fffff]['instances'])
+            hasInstance = True
+        else:
+            taskiter = range(10)
+            hasInstance = False
+       
+        # schedule all tasks with multithreading
+        threads_dic[GAname] = []
+        results_dic[GAname] = []
+        
+        for i in taskiter:
+            # each thread calls weep(fffff,ell,...) and append the result to results_dic[GAname]
+            # and the thread itself will be put into threads_dic[GAname] for thread management
+            thread = threading.Thread(
+                    target = lambda l,tup : l.append(weep(*tup)), 
+                    args = (results_dic[GAname], (fffff,ell,i if hasInstance else -1*i-1, sch, GAname))
+                    )
+            thread.start()
+            threads_dic[GAname].append(thread)
+
+        print(f'[{GAname}] Starting {fffff} ({ell})')
+
+
+    # the main scheduler loop which
+    #   1. check status of all scheduled threads
+    #   2. collect results from finished threads
+    #   3. invoke scheduler if unfinished threads remain
+
+    while len(threads_dic.keys()):
+        global_threads_remain = False
+        for GAname in list(threads_dic.keys())[:]: # check each GA one-by-one
+            threads_remain = False
+            for thread in threads_dic[GAname][:]:
+                if not thread.is_alive():
+                    thread.join()
+                    threads_dic[GAname].remove(thread)
+                else:
+                    threads_remain = True
+                    global_threads_remain = True
+
+            if not threads_remain: # sweep for a GA is done
+                threads_dic.pop(GAname)
+                
+                if not len(results_dic[GAname]):
+                    logging.critical(f'[{GAname}] thread terminated abnormally')
+                    continue
+
+                # results_dic[GAname] is a list of dictionaries, each representing the sweep result from an instance
+                # aggregating all instances, we calculate mean/std for each key specified by GA's stdout
+                keys = [key for key in results_dic[GAname][0][1][results_dic[GAname][0][0]]]
+                sweep_results = {
+                        key: [dic[bestpop][key] for bestpop,dic in results_dic[GAname]] for key in keys
+                        }
+                for key in sweep_results.keys():    
+                    sweep_results[key] = (np.mean(sweep_results[key]),np.std(sweep_results[key]))
+
+
+                for mapping in configs['GAspecs'][GAname]['io']['mappings']:
+                    if mapping['from'] == 'fffff':
+                        dict_fffff_to_problemid = mapping['map']
+                problem_id = dict_fffff_to_problemid[fffff]
+
+                # write the mean/std into csv file
+                with open(os.path.join(ROOT_DIR,GAname,f'{problem_id}_{ell}.csv'),'w') as f:
+                    column_names = list(sweep_results.keys())
+
+                    writer = csv.writer(f, delimiter='\t')
+                    writer.writerow(column_names)
+                    writer.writerow([sweep_results[key][0] for key in sweep_results.keys()])  # mean
+                    writer.writerow([sweep_results[key][1] for key in sweep_results.keys()])  # std
+
+                nfe_tup = sweep_results['nfe']
+                print(f'[{GAname}] Summary --- NFE: {nfe_tup}')
+
+        # unfinished sweep remain
+        if global_threads_remain:
+            sch.schedule()
+            #time.sleep(configs['tunnables']['sleep_time']) # sleep for some time
+        else:
+            break
+
+
+if __name__ == '__main__':
+    weeps()
