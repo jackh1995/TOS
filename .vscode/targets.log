@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed May 18 01:30:33 2022
+# Make data base, printed on Wed May 18 12:57:31 2022
 
 # Variables
 
@@ -123,7 +123,7 @@ LC_MONETARY = lzh_TW
 # environment
 LC_TIME = lzh_TW
 # environment
-SSH_CLIENT = 192.168.1.1 56071 22
+SSH_CLIENT = 140.112.25.6 10422 22
 # environment
 VSCODE_LOG_NATIVE = false
 # environment
@@ -167,7 +167,7 @@ XDG_RUNTIME_DIR = /run/user/1003
 # environment
 _CE_M = 
 # environment
-VSCODE_IPC_HOOK_CLI = /run/user/1003/vscode-ipc-986b4072-335d-4bd8-9177-51fcf89c9542.sock
+VSCODE_IPC_HOOK_CLI = /run/user/1003/vscode-ipc-44412d5c-651e-4b9f-b581-828bee82edae.sock
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -177,7 +177,7 @@ HOME = /home/jack
 # environment
 TERM = xterm-256color
 # environment
-XDG_SESSION_ID = 408
+XDG_SESSION_ID = 464
 # default
 .RECIPEPREFIX := 
 # automatic
@@ -193,7 +193,7 @@ _CE_CONDA =
 # environment
 LC_IDENTIFICATION = lzh_TW
 # environment
-SSH_CONNECTION = 192.168.1.1 56071 192.168.1.207 22
+SSH_CONNECTION = 140.112.25.6 10422 192.168.1.207 22
 # variable set hash-table stats:
 # Load=91/1024=9%, Rehash=0, Collisions=4/118=3%
 
@@ -203,10 +203,9 @@ SSH_CONNECTION = 192.168.1.1 56071 192.168.1.207 22
 
 # Directories
 
- 
-# . (device 66307, inode 21225633): 11 files, no impossibilities.
+# . (device 66307, inode 21225633): 13 files, no impossibilities.
 
-# 11 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -256,12 +255,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 19 / storage = 183 B / avg = 9 B
-# current buf: size = 8162 B / used = 183 B / count = 19 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 21 / storage = 204 B / avg = 9 B
+# current buf: size = 8162 B / used = 204 B / count = 21 / avg = 9 B
 
-# strcache performance: lookups = 22 / hit rate = 13%
+# strcache performance: lookups = 24 / hit rate = 12%
 # hash-table stats:
-# Load=19/8192=0%, Rehash=0, Collisions=0/22=0%
-# Finished Make data base on Wed May 18 01:30:33 2022
+# Load=21/8192=0%, Rehash=0, Collisions=0/24=0%
+# Finished Make data base on Wed May 18 12:57:31 2022
 
  

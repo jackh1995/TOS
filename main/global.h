@@ -3,6 +3,10 @@
  *   tianliyu@ntu.edu.tw                                                   *
  ***************************************************************************/
 
+#define TRIMMING
+#define ORDERING
+#define SIMILARITY_CHECK
+
 #ifndef _GLOBAL_H
 #define _GLOBAL_H
 
