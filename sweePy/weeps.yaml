@@ -14,9 +14,9 @@ basics:
 
 GAs:
   - TTT_MEAN_CE_S
-  - TTT_MEAN_CG_S
-  - TTT_MEAN_MOE_S
-  - TTT_MEAN_MOG_S
+  # - TTT_MEAN_CG_S
+  # - TTT_MEAN_MOE_S
+  # - TTT_MEAN_MOG_S
 
 paths:
     # path for output root directory (abs./rel.)
