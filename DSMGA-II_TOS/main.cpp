@@ -22,6 +22,7 @@ int main (int argc, char *argv[]) {
         printf ("    5. SPIN  : 36, 100, 196, 400, 784\n");
         printf ("    6. SAT   : 20, 50, 75, 100, 200\n");
         printf ("    7. MAXCUT: 50, 75, 100\n");
+        printf ("    8. USal_NSize: 100, 400\n");
         return -1;
     }
 
@@ -69,6 +70,11 @@ int main (int argc, char *argv[]) {
             if (SHOW_BISECTION) printf("Loading: %s\n", filename);
             if (SHOW_BISECTION) printf("Loading groundtruth: %s\n", opt_filename);
             loadMAXCUT(filename, opt_filename, &myMAXCUT);
+            break;
+        case USal_NSize:
+            sprintf(filename, "./traps/USal/NSize/%d_3_7_%d", ell, inst_num);
+            if (SHOW_BISECTION) printf("Loading: %s\n", filename);
+            load_USal_NSize(filename, &my_USal_NSize);
             break;
         default:
             throw runtime_error("Error: Problem not defined");

@@ -15,7 +15,6 @@
 #include "sat.h"
 #include "dsmga2.h"
 
-
 #ifdef SIMILARITY_CHECK
 bool USE_HAMMING = true;
 #else
@@ -55,6 +54,7 @@ SPINinstance mySpinGlassParams;
 NKWAProblem nkwa;
 SATinstance mySAT;
 MAXCUTinstance myMAXCUT;
+USal_NSize_instance my_USal_NSize;
 
 void outputErrMsg(const char *errMsg) {
     printf("%s\n", errMsg);

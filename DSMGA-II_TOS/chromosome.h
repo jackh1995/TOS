@@ -21,7 +21,8 @@ public:
         NK=4,
         SPINGLASS=5,
         SAT=6,
-        MAXCUT=7
+        MAXCUT=7,
+        USal_NSize=8
     } function;
 
     // static variables
@@ -88,6 +89,7 @@ public:
     double nkFitness() const;
     double satFitness() const;
     double maxcutFitness() const;
+    double USal_NSize_fitness() const;
 
     // comparison operators
     bool operator== (const Chromosome & c) const;

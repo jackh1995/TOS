@@ -41,6 +41,7 @@
 #include "zkey.h"
 #include "sat.h"
 #include "maxcut.h"
+#include "traps.h"
 #include <unordered_map>
 #include "color.h"
 #include <string>
@@ -68,6 +69,7 @@ extern SPINinstance mySpinGlassParams;
 extern SATinstance mySAT;
 extern MAXCUTinstance myMAXCUT;
 extern NKWAProblem nkwa;
+extern USal_NSize_instance my_USal_NSize;
 
 inline int quotientLong(int a) {
     return (a / (sizeof(unsigned long) * 8) );
@@ -111,14 +113,16 @@ inline double square(double a) {
     return a*a;
 }
 
-enum Problem { onemax,
-             mktrap,
-             ftrap,
-             cyctrap,
-             nk,
-             spin,
-             maxsat,
-             maxcut };
+enum Problem { 
+    onemax,
+    mktrap,
+    ftrap,
+    cyctrap,
+    nk,
+    spin,
+    maxsat,
+    maxcut,
+    USal_NSize};
 
 enum Verbosity {
     NO,
@@ -136,6 +140,7 @@ static std::unordered_map<std::string, Problem> const Problem_table = {
     {"spin", Problem::spin},
     {"nk", Problem::nk},
     {"maxsat", Problem::maxsat},
-    {"maxcut", Problem::maxcut}};
+    {"maxcut", Problem::maxcut},
+    {"USal_NSize", Problem::USal_NSize}};
 
 #endif

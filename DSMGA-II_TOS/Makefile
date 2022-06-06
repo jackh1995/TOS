@@ -17,14 +17,21 @@
 # ---------------------------------------------------------------------------- #
 CXX = g++
 #CXXFLAGS = -O0 -g -std=c++11
-CXXFLAGS = -O2 -Wall -march=native -std=c++11
+# CXXFLAGS = -O2 -Wall -march=native -std=c++11
+CXXFLAGS = -O2 -Wall -std=c++11
 INCLUDE = 
 TLIB = -lm
 
 #-----Suffix Rules---------------------------
 # set up C++ suffixes and relationship between .cc and .o files
 
-.SUFFIXES: .cpp .otttmeanmoes .otttmeanmogs .otttmeances .otttmeancgs
+# ---------------------------------------------------------------------------- #
+#                                STEP 1 SUFFFIX                                #
+# ---------------------------------------------------------------------------- #
+
+.SUFFIXES: .cpp .otttmeancgs
+
+# -------------------------------- STEP 1 ENDS ------------------------------- #
 
 .o :
 	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $<
@@ -32,35 +39,88 @@ TLIB = -lm
 .cpp :
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $< -o $@ -lm $(TLIB) 
 
-# .cpp.ottt : 
-# 	$(CXX) -DTRIMMING -DORDERING -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+# ---------------------------------------------------------------------------- #
+#                                 STEP 2 .CPP.O                                #
+# ---------------------------------------------------------------------------- #
 
-.cpp.otttmeanmoes:
-	$(CXX) -DTRIMMING -DMEAN -DORDERING -DMOVING_ONE -DEPOCH_RESTART -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-.cpp.otttmeanmogs:
-	$(CXX) -DTRIMMING -DMEAN -DORDERING -DMOVING_ONE -DGENERATION_RESTART -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-.cpp.otttmeances:
-	$(CXX) -DTRIMMING -DMEAN -DORDERING -DCOUNTING -DEPOCH_RESTART -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-.cpp.otttmeancgs:
+# .cpp.otffmean:
+# 	$(CXX) -DTRIMMING -DMEAN $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+# .cpp.otffmedian:
+# 	$(CXX) -DTRIMMING -DMEDIAN $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+# .cpp.otffmax:
+# 	$(CXX) -DTRIMMING -DMAX $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otftmoe : 
+	$(CXX) -DORDERING -DMOVING_ONE -DEPOCH_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otftmog : 
+	$(CXX) -DORDERING -DMOVING_ONE -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otftce : 
+	$(CXX) -DORDERING -DCOUNTING -DEPOCH_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otftcg : 
+	$(CXX) -DORDERING -DCOUNTING -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.ofttmfe : 
+	$(CXX) -DORDERING -DMOVING_FRONT -DEPOCH_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.ofttmfg : 
+	$(CXX) -DORDERING -DMOVING_FRONT -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.offts : 
+	$(CXX) -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otftmedians : 
+	$(CXX) -DTRIMMING -DMEDIAN -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otftmeans : 
+	$(CXX) -DTRIMMING -DMEAN -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.ofttcgs : 
+	$(CXX) -DORDERING -DCOUNTING -DGENERATION_RESTART -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.ottfmeancg :
+	$(CXX) -DTRIMMING -DMEAN -DORDERING -DCOUNTING -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otttmeancgs : 
 	$(CXX) -DTRIMMING -DMEAN -DORDERING -DCOUNTING -DGENERATION_RESTART -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+# -------------------------------- STEP 2 ENDS ------------------------------- #
 	
 #-----File Dependencies----------------------
 
 SRC = $(OBJ_NOFLAG) $(SRC_FLAG) $(SRC_Zobrist)
 
 SRC_FLAG = chromosome.cpp dsmga2.cpp global.cpp
-SRC_NOFLAG = fastcounting.cpp main.cpp mt19937ar.cpp myrand.cpp spin.cpp nk-wa.cpp sat.cpp maxcut.cpp
+SRC_NOFLAG = fastcounting.cpp main.cpp mt19937ar.cpp myrand.cpp spin.cpp nk-wa.cpp sat.cpp maxcut.cpp traps.cpp
 SRC_Zobrist = genZobrist.cpp
 
-OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_MOE_S) $(OBJ_TTT_MEAN_MOG_S) $(OBJ_TTT_MEAN_CE_S) $(OBJ_TTT_MEAN_CG_S)
+# ---------------------------------------------------------------------------- #
+#                                  STEP 3 OBJ                                  #
+# ---------------------------------------------------------------------------- #
+
+OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S)
+
+# -------------------------------- STEP 3 ENDS ------------------------------- #
+
 OBJ_NOFLAG = $(addsuffix .o, $(basename $(SRC_NOFLAG)))
 
 OBJ_Z = $(addsuffix .o, $(basename $(SRC_Zobrist)))
 
 OBJ_O = $(addsuffix .o, $(basename $(SRC_FLAG)))
 
+# ---------------------------------------------------------------------------- #
+#                                  STEP 4 ALL                                  #
+# ---------------------------------------------------------------------------- #
+
 # all: DSMGA2 dsmga2-tos_ttt genZobrist  # sweep
-all: DSMGA2 TTT_MEAN_MOE_S TTT_MEAN_MOG_S TTT_MEAN_CE_S TTT_MEAN_CG_S genZobrist  # sweep
+# all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
+all: DSMGA2 genZobrist  # sweep
+
+# -------------------------------- STEP 4 ENDS ------------------------------- #
 
 DSMGA2: $(OBJ_NOFLAG) $(OBJ_O)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_O)
@@ -69,81 +129,88 @@ genZobrist: $(OBJ_Z)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_Z)
 
 # ---------------------------------------------------------------------------- #
-#                                      FFF                                     #
+#                                   STEP 5 GA                                  #
 # ---------------------------------------------------------------------------- #
 
+
+# ------------------------------------ FFF ----------------------------------- #
 # - dsmga2-tos-fff
-
-# ---------------------------------------------------------------------------- #
-#                                      TFF                                     #
 # ---------------------------------------------------------------------------- #
 
-# - dsmga2-tos-tft
-# - dsmga2-tos-tff_max
-# - dsmga2-tos-tff_median
 
-# ---------------------------------------------------------------------------- #
-#                                      FTF                                     #
-# ---------------------------------------------------------------------------- #
+# ------------------------------------ TFF ----------------------------------- #
+OBJ_TFF_MEAN = $(addsuffix .otffmean, $(basename $(SRC_FLAG)))
+TFF_MEAN: $(OBJ_NOFLAG) $(OBJ_TFF_MEAN)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TFF_MEAN)
 
-# - dsmga2-tos-ftf_moE
-# - dsmga2-tos-ftf_moG
-# - dsmga2-tos-ftf_moN
-# - dsmga2-tos-tff_cntE
-# - dsmga2-tos-ftf_cntG
-# - dsmga2-tos-ftf_cntN
-# - dsmga2-tos-ftf_mfE
-# - dsmga2-tos-ftf_mfG
-# - dsmga2-tos-ftf_mfN
-# - dsmga2-tos-ftf_cntE
+OBJ_TFF_MEDIAN = $(addsuffix .otffmedian, $(basename $(SRC_FLAG)))
+TFF_MEDIAN: $(OBJ_NOFLAG) $(OBJ_TFF_MEDIAN)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TFF_MEDIAN)
 
-# ---------------------------------------------------------------------------- #
-#                                      FFT                                     #
+OBJ_TFF_MAX = $(addsuffix .otffmax, $(basename $(SRC_FLAG)))
+TFF_MAX: $(OBJ_NOFLAG) $(OBJ_TFF_MAX)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TFF_MAX)
 # ---------------------------------------------------------------------------- #
 
-# - dsmga2-tos-fft
 
-# ---------------------------------------------------------------------------- #
-#                                      TTF                                     #
-# ---------------------------------------------------------------------------- #
-
-# - dsmga2-tos-ttf_moG
-# - dsmga2-tos-ttf_cntE
-# - dsmga2-tos-ttf_cntG
-# - dsmga2-tos-ttf_moE
-
-# ---------------------------------------------------------------------------- #
-#                                      TFT                                     #
+# ------------------------------------ FTF ----------------------------------- #
+OBJ_FTF_CG  = $(addsuffix .otftcg, $(basename $(SRC_FLAG)))
+FTF_CG: $(OBJ_NOFLAG) $(OBJ_FTF_CG)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_FTF_CG)
 # ---------------------------------------------------------------------------- #
 
-# ---------------------------------------------------------------------------- #
-#                                      FTT                                     #
+
+# ------------------------------------ FFT ----------------------------------- #
+OBJ_FFT_S = $(addsuffix .offts, $(basename $(SRC_FLAG)))
+FFT_S: $(OBJ_NOFLAG) $(OBJ_FFT_S)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_FFT_S)
 # ---------------------------------------------------------------------------- #
 
-# - dsmga2-tos-ftt_moG
-# - dsmga2-tos-ftt_moE
-# - dsmga2-tos-ftt_count
 
-# ---------------------------------------------------------------------------- #
-#                                      TTT                                     #
+# ------------------------------------ TTF ----------------------------------- #
+OBJ_TTF_MEAN_CG = $(addsuffix .ottfmeancg, $(basename $(SRC_FLAG)))
+TTF_MEAN_CG: $(OBJ_NOFLAG) $(OBJ_TTF_MEAN_CG)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TTF_MEAN_CG)
 # ---------------------------------------------------------------------------- #
 
-# --------------------------- - dsmga2-tos-ttt_moE --------------------------- #
+
+# ------------------------------------ TFT ----------------------------------- #
+OBJ_TFT_MEDIAN_S = $(addsuffix .otftmedians, $(basename $(SRC_FLAG)))
+TFT_MEDIAN_S: $(OBJ_NOFLAG) $(OBJ_TFT_MEDIAN_S)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TFT_MEDIAN_S)
+
+OBJ_TFT_MEAN_S = $(addsuffix .otftmeans, $(basename $(SRC_FLAG)))
+TFT_MEAN_S: $(OBJ_NOFLAG) $(OBJ_TFT_MEAN_S)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TFT_MEAN_S)
+
+# ------------------------------------ FTT ----------------------------------- #S
+OBJ_FTT_CG_S = $(addsuffix .ofttcgs, $(basename $(SRC_FLAG)))
+FTT_CG_S: $(OBJ_NOFLAG) $(OBJ_FTT_CG_S)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_FTT_CG_S)
+
+# ------------------------------------ TTT ----------------------------------- #
+
+# dsmga2-tos-ttt_moE
 OBJ_TTT_MEAN_MOE_S = $(addsuffix .otttmeanmoes, $(basename $(SRC_FLAG)))
 TTT_MEAN_MOE_S: $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_MOE_S)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_MOE_S)
-# --------------------------- - dsmga2-tos-ttt_moG --------------------------- #
+
+# dsmga2-tos-ttt_moG
 OBJ_TTT_MEAN_MOG_S = $(addsuffix .otttmeanmogs, $(basename $(SRC_FLAG)))
 TTT_MEAN_MOG_S: $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_MOG_S)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_MOG_S)
-# --------------------------- - dsmga2-tos-ttt_cntE -------------------------- #
+
+# dsmga2-tos-ttt_cntE
 OBJ_TTT_MEAN_CE_S = $(addsuffix .otttmeances, $(basename $(SRC_FLAG)))
 TTT_MEAN_CE_S: $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_CE_S)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_CE_S)
-# --------------------------- - dsmga2-tos-ttt_cntG -------------------------- #
+
+# dsmga2-tos-ttt_cntG
 OBJ_TTT_MEAN_CG_S = $(addsuffix .otttmeancgs, $(basename $(SRC_FLAG)))
 TTT_MEAN_CG_S: $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_CG_S)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_TTT_MEAN_CG_S)
+
+# -------------------------------- STEP 5 ENDS ------------------------------- #
 
 #-----Other stuff----------------------------
 depend:
@@ -155,39 +222,41 @@ clean:
 # DO NOT DELETE
 
 chromosome.o: spin.h chromosome.h global.h myrand.h mt19937ar.h
-chromosome.o: bitwisedistance.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h
+chromosome.o: bitwisedistance.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h traps.h
 dsmga2.o: chromosome.h global.h myrand.h mt19937ar.h bitwisedistance.h
-dsmga2.o: spin.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h dsmga2.h maxcut.h
+dsmga2.o: spin.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h dsmga2.h maxcut.h traps.h
 dsmga2.o: statistics.h trimatrix.h fastcounting.h
 fastcounting.o: global.h myrand.h mt19937ar.h bitwisedistance.h spin.h
-fastcounting.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h fastcounting.h maxcut.h
+fastcounting.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h fastcounting.h maxcut.h traps.h
 global.o: myrand.h mt19937ar.h statistics.h doublelinkedlistarray.h zkey.h
-global.o: chromosome.h global.h bitwisedistance.h spin.h nk-wa.h sat.h maxcut.h
+global.o: chromosome.h global.h bitwisedistance.h spin.h nk-wa.h sat.h maxcut.h traps.h
 main.o: statistics.h dsmga2.h chromosome.h global.h myrand.h mt19937ar.h
 main.o: bitwisedistance.h spin.h nk-wa.h doublelinkedlistarray.h zkey.h
-main.o: sat.h trimatrix.h fastcounting.h maxcut.h
+main.o: sat.h trimatrix.h fastcounting.h maxcut.h traps.h
 myrand.o: myrand.h mt19937ar.h
 spin.o: global.h myrand.h mt19937ar.h bitwisedistance.h spin.h
-spin.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h
+spin.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h traps.h
 nk-wa.o: nk-wa.h
 sat.o: sat.h 
 maxcut.o: maxcut.h
+traps.o: traps.h
 chromosome.o: spin.h chromosome.h global.h myrand.h mt19937ar.h
-chromosome.o: bitwisedistance.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h
+chromosome.o: bitwisedistance.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h traps.h
 dsmga2.o: chromosome.h global.h myrand.h mt19937ar.h bitwisedistance.h
-dsmga2.o: spin.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h dsmga2.h maxcut.h
+dsmga2.o: spin.h nk-wa.h doublelinkedlistarray.h zkey.h sat.h dsmga2.h maxcut.h traps.h
 dsmga2.o: statistics.h trimatrix.h fastcounting.h
 fastcounting.o: global.h myrand.h mt19937ar.h bitwisedistance.h spin.h
-fastcounting.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h fastcounting.h maxcut.h
+fastcounting.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h fastcounting.h maxcut.h traps.h
 global.o: myrand.h mt19937ar.h statistics.h doublelinkedlistarray.h zkey.h
-global.o: chromosome.h global.h bitwisedistance.h spin.h nk-wa.h sat.h maxcut.h
+global.o: chromosome.h global.h bitwisedistance.h spin.h nk-wa.h sat.h maxcut.h traps.h
 # sweep.o: statistics.h dsmga2.h chromosome.h global.h myrand.h mt19937ar.h
 # sweep.o: bitwisedistance.h spin.h nk-wa.h doublelinkedlistarray.h
 # sweep.o: zkey.h sat.h trimatrix.h fastcounting.h maxcut.h
 myrand.o: myrand.h mt19937ar.h
 spin.o: global.h myrand.h mt19937ar.h bitwisedistance.h spin.h
-spin.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h
+spin.o: nk-wa.h doublelinkedlistarray.h zkey.h sat.h maxcut.h traps.h
 nk-wa.o: nk-wa.h
 sat.o: sat.h
 maxcut.o: maxcut.h
+traps.o: traps.h
 nono.o: nono.h

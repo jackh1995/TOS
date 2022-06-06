@@ -231,6 +231,9 @@ double Chromosome::getMaxFitness () const {
         case MAXCUT:
             maxF = myMAXCUT.opt;
             break;
+        case USal_NSize:
+            maxF = my_USal_NSize.opt;
+            break;
         default: 
             maxF = INF;
     }
@@ -332,6 +335,9 @@ double Chromosome::evaluate(int& counter) {
             break;
         case MAXCUT:
             accum = maxcutFitness();
+            break;
+        case USal_NSize:
+            accum = USal_NSize_fitness();
             break;
         default:
             accum = mkTrap(1, 0.8);
@@ -571,6 +577,21 @@ double Chromosome::maxcutFitness() const {
     }
 
     double result = evaluateMAXCUT(x, &myMAXCUT);
+
+    delete[] x;
+
+    return result;
+}
+
+double Chromosome::USal_NSize_fitness() const {
+
+    int *x = new int[length];
+
+    for (int i=0; i!=length; ++i){
+        x[i] = getVal(i);
+    }
+
+    double result = evaluate_USal_NSize(x, &my_USal_NSize);
 
     delete[] x;
 
