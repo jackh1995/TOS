@@ -9,7 +9,8 @@ id2problem = {
     '4': 'nk',
     '5': 'spin',
     '6': 'sat',
-    '7': 'maxcut'
+    '7': 'maxcut',
+    '8': 'USal_NSize_3_7'
 }
 
 rows = []
