@@ -11,7 +11,9 @@ id2problem = {
     '6': 'sat',
     '7': 'maxcut',
     '8': 'USal_NSize_3_7',
-    '9': 'USal_NSize_3_10'
+    '9': 'USal_NSize_3_10',
+    '10': 'linear_mktrap',
+    '11': 'exponential_mktrap',
 }
 
 rows = []
