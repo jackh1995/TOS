@@ -29,7 +29,8 @@ TLIB = -lm
 #                                STEP 1 SUFFFIX                                #
 # ---------------------------------------------------------------------------- #
 
-.SUFFIXES: .cpp .otttmeancgs
+.SUFFIXES: .cpp .otttmeancgs .otffmean .oftfcg
+# .otttmeancgs
 
 # -------------------------------- STEP 1 ENDS ------------------------------- #
 
@@ -43,32 +44,23 @@ TLIB = -lm
 #                                 STEP 2 .CPP.O                                #
 # ---------------------------------------------------------------------------- #
 
-# .cpp.otffmean:
-# 	$(CXX) -DTRIMMING -DMEAN $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-# .cpp.otffmedian:
-# 	$(CXX) -DTRIMMING -DMEDIAN $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-# .cpp.otffmax:
-# 	$(CXX) -DTRIMMING -DMAX $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-.cpp.otftmoe : 
-	$(CXX) -DORDERING -DMOVING_ONE -DEPOCH_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-.cpp.otftmog : 
-	$(CXX) -DORDERING -DMOVING_ONE -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-.cpp.otftce : 
+.cpp.oftfce:
 	$(CXX) -DORDERING -DCOUNTING -DEPOCH_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
-.cpp.otftcg : 
+.cpp.oftfcg:
 	$(CXX) -DORDERING -DCOUNTING -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otffmean:
+	$(CXX) -DTRIMMING -DMEAN $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otffmedian:
+	$(CXX) -DTRIMMING -DMEDIAN $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+
+.cpp.otffmax:
+	$(CXX) -DTRIMMING -DMAX $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 .cpp.ofttmfe : 
 	$(CXX) -DORDERING -DMOVING_FRONT -DEPOCH_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
-
-.cpp.ofttmfg : 
-	$(CXX) -DORDERING -DMOVING_FRONT -DGENERATION_RESTART $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
 .cpp.offts : 
 	$(CXX) -DSIMILARITY_CHECK $(CXXFLAGS) $(INCLUDE) -c $< -o $@
@@ -102,7 +94,7 @@ SRC_Zobrist = genZobrist.cpp
 #                                  STEP 3 OBJ                                  #
 # ---------------------------------------------------------------------------- #
 
-OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S)
+OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S) $(OBJ_FTF_CG)
 
 # -------------------------------- STEP 3 ENDS ------------------------------- #
 
@@ -118,7 +110,9 @@ OBJ_O = $(addsuffix .o, $(basename $(SRC_FLAG)))
 
 # all: DSMGA2 dsmga2-tos_ttt genZobrist  # sweep
 # all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
-all: DSMGA2 genZobrist  # sweep
+# all: DSMGA2 TFF_MEAN genZobrist  # sweep
+all: FTF_CG genZobrist  # sweep
+
 
 # -------------------------------- STEP 4 ENDS ------------------------------- #
 
@@ -154,7 +148,11 @@ TFF_MAX: $(OBJ_NOFLAG) $(OBJ_TFF_MAX)
 
 
 # ------------------------------------ FTF ----------------------------------- #
-OBJ_FTF_CG  = $(addsuffix .otftcg, $(basename $(SRC_FLAG)))
+OBJ_FTF_CE  = $(addsuffix .oftfce, $(basename $(SRC_FLAG)))
+FTF_CE: $(OBJ_NOFLAG) $(OBJ_FTF_CE)
+	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_FTF_CE)
+
+OBJ_FTF_CG  = $(addsuffix .oftfcg, $(basename $(SRC_FLAG)))
 FTF_CG: $(OBJ_NOFLAG) $(OBJ_FTF_CG)
 	$(CXX) $(CXXFLAGS) $(INCLUDE) $(TLIB) -o $@ $(OBJ_NOFLAG) $(OBJ_FTF_CG)
 # ---------------------------------------------------------------------------- #

@@ -22,7 +22,8 @@ public:
         SPINGLASS=5,
         SAT=6,
         MAXCUT=7,
-        USal_NSize=8
+        USal_NSize=8,
+        USal_NSize_large=9
     } function;
 
     // static variables

@@ -234,6 +234,9 @@ double Chromosome::getMaxFitness () const {
         case USal_NSize:
             maxF = my_USal_NSize.opt;
             break;
+        case USal_NSize_large:
+            maxF = my_USal_NSize.opt;
+            break;
         default: 
             maxF = INF;
     }
@@ -337,6 +340,9 @@ double Chromosome::evaluate(int& counter) {
             accum = maxcutFitness();
             break;
         case USal_NSize:
+            accum = USal_NSize_fitness();
+            break;
+        case USal_NSize_large:
             accum = USal_NSize_fitness();
             break;
         default:

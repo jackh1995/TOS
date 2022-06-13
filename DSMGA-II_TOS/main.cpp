@@ -22,7 +22,8 @@ int main (int argc, char *argv[]) {
         printf ("    5. SPIN  : 36, 100, 196, 400, 784\n");
         printf ("    6. SAT   : 20, 50, 75, 100, 200\n");
         printf ("    7. MAXCUT: 50, 75, 100\n");
-        printf ("    8. USal_NSize: 100, 400\n");
+        printf ("    8. USal_NSize: 100, 200, 300, 400\n");
+        printf ("    9. USal_NSize_large: 100, 200, 300, 400\n");
         return -1;
     }
 
@@ -73,6 +74,11 @@ int main (int argc, char *argv[]) {
             break;
         case USal_NSize:
             sprintf(filename, "./traps/USal/NSize/%d_3_7_%d", ell, inst_num);
+            if (SHOW_BISECTION) printf("Loading: %s\n", filename);
+            load_USal_NSize(filename, &my_USal_NSize);
+            break;
+        case USal_NSize_large:
+            sprintf(filename, "./traps/USal/NSize/%d_3_10_%d", ell, inst_num);
             if (SHOW_BISECTION) printf("Loading: %s\n", filename);
             load_USal_NSize(filename, &my_USal_NSize);
             break;

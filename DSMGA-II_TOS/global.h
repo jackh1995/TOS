@@ -122,7 +122,8 @@ enum Problem {
     spin,
     maxsat,
     maxcut,
-    USal_NSize};
+    USal_NSize,
+    USal_NSize_large};
 
 enum Verbosity {
     NO,
@@ -141,6 +142,7 @@ static std::unordered_map<std::string, Problem> const Problem_table = {
     {"nk", Problem::nk},
     {"maxsat", Problem::maxsat},
     {"maxcut", Problem::maxcut},
-    {"USal_NSize", Problem::USal_NSize}};
+    {"USal_NSize", Problem::USal_NSize},
+    {"USal_NSize_large", Problem::USal_NSize_large}};
 
 #endif
