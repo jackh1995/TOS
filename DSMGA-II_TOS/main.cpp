@@ -49,7 +49,7 @@ int main (int argc, char *argv[]) {
         case onemax: case mktrap: case cyctrap: case ftrap:
             break;
         case nk: 
-            sprintf(filename, "./NK_Instance/pnk%d_%d_%d_%d", ell, 4, 5, inst_num);
+            sprintf(filename, "./NK_Instance/pnk%d_%d_%d_%d", ell, 4, 1, inst_num);
             if (SHOW_BISECTION) printf("Loading: %s\n", filename);
             fp = fopen(filename, "r");
             loadNKWAProblem(fp, &nkwa);
