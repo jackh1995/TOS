@@ -23,7 +23,9 @@ public:
         SAT=6,
         MAXCUT=7,
         USal_NSize=8,
-        USal_NSize_large=9
+        USal_NSize_large=9,
+        linear_mktrap=10,
+        exponential_mktrap=11,
     } function;
 
     // static variables
@@ -91,6 +93,8 @@ public:
     double satFitness() const;
     double maxcutFitness() const;
     double USal_NSize_fitness() const;
+    double linear_mktrap_fitness() const;
+    double exponential_mktrap_fitness() const;
 
     // comparison operators
     bool operator== (const Chromosome & c) const;

@@ -22,7 +22,10 @@ int main (int argc, char *argv[]) {
         printf ("    5. SPIN  : 36, 100, 196, 400, 784\n");
         printf ("    6. SAT   : 20, 50, 75, 100, 200\n");
         printf ("    7. MAXCUT: 50, 75, 100\n");
-        printf ("    8. USal_NSize: 100, 400\n");
+        printf ("    8. USal_NSize: 100, 200, 300, 400\n");
+        printf ("    9. USal_NSize_large: 100, 200, 300, 400\n");
+        printf ("    10. Linear MKTRAP\n");
+        printf ("    11. Exponential MKTRAP\n");
         return -1;
     }
 
@@ -46,7 +49,7 @@ int main (int argc, char *argv[]) {
         char filename[200];
         char opt_filename[200];
         FILE *fp;
-        case onemax: case mktrap: case cyctrap: case ftrap:
+        case onemax: case mktrap: case cyctrap: case ftrap: case linear_mktrap: case exponential_mktrap:
             break;
         case nk: 
             sprintf(filename, "./NK_Instance/pnk%d_%d_%d_%d", ell, 4, 1, inst_num);
@@ -73,6 +76,11 @@ int main (int argc, char *argv[]) {
             break;
         case USal_NSize:
             sprintf(filename, "./traps/USal/NSize/%d_3_7_%d", ell, inst_num);
+            if (SHOW_BISECTION) printf("Loading: %s\n", filename);
+            load_USal_NSize(filename, &my_USal_NSize);
+            break;
+        case USal_NSize_large:
+            sprintf(filename, "./traps/USal/NSize/%d_3_10_%d", ell, inst_num);
             if (SHOW_BISECTION) printf("Loading: %s\n", filename);
             load_USal_NSize(filename, &my_USal_NSize);
             break;

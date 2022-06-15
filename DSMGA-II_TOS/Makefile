@@ -94,7 +94,7 @@ SRC_Zobrist = genZobrist.cpp
 #                                  STEP 3 OBJ                                  #
 # ---------------------------------------------------------------------------- #
 
-OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S) $(OBJ_FTF_CG)
+OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S) $(OBJ_FTF_CG) $(OBJ_TFF_MEAN)
 
 # -------------------------------- STEP 3 ENDS ------------------------------- #
 
@@ -108,10 +108,10 @@ OBJ_O = $(addsuffix .o, $(basename $(SRC_FLAG)))
 #                                  STEP 4 ALL                                  #
 # ---------------------------------------------------------------------------- #
 
-# all: DSMGA2 dsmga2-tos_ttt genZobrist  # sweep
+all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
 # all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
 # all: DSMGA2 TFF_MEAN genZobrist  # sweep
-all: FTF_CG genZobrist  # sweep
+# all: FTF_CG genZobrist  # sweep
 
 
 # -------------------------------- STEP 4 ENDS ------------------------------- #

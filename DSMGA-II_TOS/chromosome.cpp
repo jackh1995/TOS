@@ -9,6 +9,7 @@
 #include <iostream>
 #include <bitset>
 #include "dsmga2.h"
+#include <cmath>
 
 using namespace std;
 
@@ -237,6 +238,12 @@ double Chromosome::getMaxFitness () const {
         case USal_NSize_large:
             maxF = my_USal_NSize.opt;
             break;
+        case linear_mktrap:
+            maxF = (1 + length/TRAP_K) * length/TRAP_K / 2;
+            break;
+        case exponential_mktrap:
+            maxF = pow2(length/TRAP_K) - 1;
+            break;
         default: 
             maxF = INF;
     }
@@ -344,6 +351,12 @@ double Chromosome::evaluate(int& counter) {
             break;
         case USal_NSize_large:
             accum = USal_NSize_fitness();
+            break;
+        case linear_mktrap:
+            accum = linear_mktrap_fitness();
+            break;
+        case exponential_mktrap:
+            accum = exponential_mktrap_fitness();
             break;
         default:
             accum = mkTrap(1, 0.8);
@@ -600,6 +613,66 @@ double Chromosome::USal_NSize_fitness() const {
     double result = evaluate_USal_NSize(x, &my_USal_NSize);
 
     delete[] x;
+
+    return result;
+}
+
+double Chromosome::linear_mktrap_fitness() const {
+
+    int i, j;
+    int u;
+    int TRAP_M = length / TRAP_K;
+
+    if (length % TRAP_K != 0)
+        outputErrMsg ("TRAP_K doesn't divide length");
+
+    double result = 0;
+
+    double fHigh = 1.0;
+    double fLow = 0.8;
+
+    for (i = 0; i < TRAP_M; i++) {
+
+        u = 0;
+
+        for (j = 0; j < TRAP_K; j++) {
+            u += getVal(i * TRAP_K + j);
+        }
+
+        result += trap (u, fHigh, fLow, TRAP_K);
+        fHigh += 1;
+        fLow = fHigh * 4 / 5;
+    }
+
+    return result;
+}
+
+double Chromosome::exponential_mktrap_fitness() const {
+
+    int i, j;
+    int u;
+    int TRAP_M = length / TRAP_K;
+
+    if (length % TRAP_K != 0)
+        outputErrMsg ("TRAP_K doesn't divide length");
+
+    double result = 0;
+
+    double fHigh = 1.0;
+    double fLow = 0.8;
+
+    for (i = 0; i < TRAP_M; i++) {
+
+        u = 0;
+
+        for (j = 0; j < TRAP_K; j++) {
+            u += getVal(i * TRAP_K + j);
+        }
+
+        result += trap (u, fHigh, fLow, TRAP_K);
+        fHigh *= 2.0;
+        fLow = fHigh * 4.0 / 5.0;
+    }
 
     return result;
 }

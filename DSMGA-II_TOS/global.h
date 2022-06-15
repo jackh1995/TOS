@@ -123,7 +123,9 @@ enum Problem {
     maxsat,
     maxcut,
     USal_NSize,
-    USal_NSize_large};
+    USal_NSize_large,
+    linear_mktrap,
+    exponential_mktrap};
 
 enum Verbosity {
     NO,
@@ -143,6 +145,8 @@ static std::unordered_map<std::string, Problem> const Problem_table = {
     {"maxsat", Problem::maxsat},
     {"maxcut", Problem::maxcut},
     {"USal_NSize", Problem::USal_NSize},
-    {"USal_NSize_large", Problem::USal_NSize_large}};
+    {"USal_NSize_large", Problem::USal_NSize_large},
+    {"linear_mktrap", Problem::linear_mktrap},
+    {"exponential_mktrap", Problem::exponential_mktrap}};
 
 #endif
