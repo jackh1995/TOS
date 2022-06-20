@@ -14,6 +14,10 @@ id2problem = {
     '9': 'USal_NSize_3_10',
     '10': 'linear_mktrap',
     '11': 'exponential_mktrap',
+    '12': 'four_five_six',
+    '13': 'three_four_five_six_seven',
+    '14': 'ftrap4',
+    '15': 'ftrap6'
 }
 
 rows = []

@@ -26,6 +26,10 @@ int main (int argc, char *argv[]) {
         printf ("    9. USal_NSize_large: 100, 200, 300, 400\n");
         printf ("    10. Linear MKTRAP\n");
         printf ("    11. Exponential MKTRAP\n");
+        printf ("    12. four_five_six\n");
+        printf ("    13. three_four_five_six_seven\n");
+        printf ("    14. ftrap4\n");
+        printf ("    15. ftrap6\n");
         return -1;
     }
 
@@ -49,7 +53,7 @@ int main (int argc, char *argv[]) {
         char filename[200];
         char opt_filename[200];
         FILE *fp;
-        case onemax: case mktrap: case cyctrap: case ftrap: case linear_mktrap: case exponential_mktrap:
+        case onemax: case mktrap: case cyctrap: case ftrap: case linear_mktrap: case exponential_mktrap: case four_five_six: case three_four_five_six_seven: case ftrap4: case ftrap6:
             break;
         case nk: 
             sprintf(filename, "./NK_Instance/pnk%d_%d_%d_%d", ell, 4, 1, inst_num);

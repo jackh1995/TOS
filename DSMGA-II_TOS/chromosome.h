@@ -26,6 +26,10 @@ public:
         USal_NSize_large=9,
         linear_mktrap=10,
         exponential_mktrap=11,
+        four_five_six=12,
+        three_four_five_six_seven=13,
+        ftrap4=14,
+        ftrap6=15,
     } function;
 
     // static variables
@@ -95,6 +99,10 @@ public:
     double USal_NSize_fitness() const;
     double linear_mktrap_fitness() const;
     double exponential_mktrap_fitness() const;
+    double four_five_six_fitness() const;
+    double three_four_five_six_seven_fitness() const;
+    double ftrap4_fitness() const;
+    double ftrap6_fitness() const;
 
     // comparison operators
     bool operator== (const Chromosome & c) const;
