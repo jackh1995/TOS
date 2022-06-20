@@ -108,9 +108,9 @@ OBJ_O = $(addsuffix .o, $(basename $(SRC_FLAG)))
 #                                  STEP 4 ALL                                  #
 # ---------------------------------------------------------------------------- #
 
-all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
 # all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
-# all: DSMGA2 TFF_MEAN genZobrist  # sweep
+# all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
+all: DSMGA2 TFF_MEAN genZobrist  # sweep
 # all: FTF_CG genZobrist  # sweep
 
 

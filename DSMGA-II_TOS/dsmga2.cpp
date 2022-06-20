@@ -15,7 +15,12 @@
 #include <vector>
 #include <unordered_set>
 #include <numeric>
+
+#include <fstream>
+
 using namespace std;
+#define GA string("TFF")
+#define PROB string("11")
 
 /* ------------------------------- CONSTRUCTOR ------------------------------ */
 
@@ -144,11 +149,10 @@ int DSMGA2::doIt () {
 }
 
 void DSMGA2::oneRun() {
-    
+
     if (CACHE) {
         Chromosome::cache.clear();
     }
-    
     mixing();
     
     #ifdef ORDERING
@@ -647,6 +651,12 @@ void DSMGA2::mixing() {
                 break;
         }
 
+        // FIXME
+        // std::ofstream outfileb;
+        // outfileb.open("../" + GA + "_" + PROB + "_100.txt", std::ios_base::app | std::ios_base::out); // append instead of overwrite
+        // outfileb << "\n";
+        // outfileb.close();
+
         if (Chromosome::hit)
             break;
     
@@ -867,6 +877,12 @@ void DSMGA2::restrictedMixing(Chromosome &ch) {
         size = size_max;
     }
 
+    // FIXME
+    // std::ofstream outfile;
+    // outfile.open("../" + GA + "_" + PROB + "_100.txt", std::ios_base::app); // append instead of overwrite
+    // outfile << size << ' '; 
+    // outfile.close();
+    
     while (mask.size() > size) {
         mask.pop_back();
     }
