@@ -258,6 +258,12 @@ double Chromosome::getMaxFitness () const {
         case ftrap6:
             maxF = length/6;
             break;
+        case zeroonemax:
+            maxF = length;
+            break;
+        case bigftrap:
+            maxF = 1.0;
+            break;
         default: 
             maxF = INF;
     }
@@ -384,6 +390,12 @@ double Chromosome::evaluate(int& counter) {
         case ftrap6:
             accum = ftrap6_fitness();
             break;
+        case zeroonemax:
+            accum = zeroonemax_fitness();
+            break;
+        case bigftrap:
+            accum = bigftrap_fitness();
+            break;
         default:
             accum = mkTrap(1, 0.8);
             break;
@@ -460,6 +472,21 @@ double Chromosome::oneMax () const {
         result += getVal(i);
 
     return result;
+}
+
+// zeroonemax
+double Chromosome::zeroonemax_fitness () const {
+
+    double result = 0.0;
+
+    for (int i = 0; i < length; ++i)
+        result += getVal(i);
+
+    if (result <= length / 2) {
+        return (result - double(length) / 2.0) * (-2.0);
+    } else {
+        return (result - double(length) / 2.0) * (2.0);
+    }
 }
 
 double Chromosome::trap (int unitary, double fHigh, double fLow, int trapK) const {
@@ -563,6 +590,26 @@ double Chromosome::fTrap() const {
     }
 
     return result;
+}
+
+double Chromosome::bigftrap_fitness() const {
+
+    double result = 0.0;
+
+    for (int i = 0; i < length; ++i)
+        result += getVal(i);
+    
+    if (result == 0.0 || result == length) {
+        return 1.0;
+    }
+
+    double m = 0.8 / (double(length) / 2.0 - 1);
+
+    if (result <= length / 2) {
+        return (result - 1.0) * m;
+    } else {
+        return (double(length - 1) - result) * m;
+    }    
 }
 
 double Chromosome::ftrap4_fitness() const {

@@ -129,7 +129,9 @@ enum Problem {
     four_five_six,
     three_four_five_six_seven,
     ftrap4,
-    ftrap6};
+    ftrap6,
+    zeroonemax,
+    bigftrap};
 
 enum Verbosity {
     NO,
@@ -155,6 +157,8 @@ static std::unordered_map<std::string, Problem> const Problem_table = {
     {"four_five_six", Problem::four_five_six},
     {"three_four_five_six_seven", Problem::three_four_five_six_seven},
     {"ftrap4", Problem::ftrap4},
-    {"ftrap6", Problem::ftrap6}};
+    {"ftrap6", Problem::ftrap6},
+    {"zeroonemax", Problem::zeroonemax},
+    {"bigftrap", Problem::bigftrap}};
 
 #endif

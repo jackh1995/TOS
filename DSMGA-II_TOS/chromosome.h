@@ -30,6 +30,8 @@ public:
         three_four_five_six_seven=13,
         ftrap4=14,
         ftrap6=15,
+        zeroonemax=16,
+        bigftrap=17
     } function;
 
     // static variables
@@ -103,6 +105,8 @@ public:
     double three_four_five_six_seven_fitness() const;
     double ftrap4_fitness() const;
     double ftrap6_fitness() const;
+    double zeroonemax_fitness () const;
+    double bigftrap_fitness () const;
 
     // comparison operators
     bool operator== (const Chromosome & c) const;
