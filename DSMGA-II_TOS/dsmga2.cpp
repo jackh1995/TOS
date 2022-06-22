@@ -19,8 +19,6 @@
 #include <fstream>
 
 using namespace std;
-#define GA string("TFF")
-#define PROB string("11")
 
 /* ------------------------------- CONSTRUCTOR ------------------------------ */
 
@@ -651,12 +649,6 @@ void DSMGA2::mixing() {
                 break;
         }
 
-        // FIXME
-        // std::ofstream outfileb;
-        // outfileb.open("../" + GA + "_" + PROB + "_100.txt", std::ios_base::app | std::ios_base::out); // append instead of overwrite
-        // outfileb << "\n";
-        // outfileb.close();
-
         if (Chromosome::hit)
             break;
     
@@ -783,7 +775,7 @@ bool DSMGA2::restrictedMixing(Chromosome &ch, vector<int> &mask) {
             break;
         }
     }
-    
+
     // print rm status
     if (verbose == RM)
         if (mask.size()) {
@@ -876,12 +868,6 @@ void DSMGA2::restrictedMixing(Chromosome &ch) {
     if (size > size_max) {
         size = size_max;
     }
-
-    // FIXME
-    // std::ofstream outfile;
-    // outfile.open("../" + GA + "_" + PROB + "_100.txt", std::ios_base::app); // append instead of overwrite
-    // outfile << size << ' '; 
-    // outfile.close();
     
     while (mask.size() > size) {
         mask.pop_back();
@@ -1134,12 +1120,18 @@ void DSMGA2::update_orderILS(size_t lastUB) {
     #endif
 
     #ifdef COUNTING
-    // reorder ils based on the count for each size
     ++rm_success_sizes_count[lastUB-1];
-    sort(orderILS.begin(), orderILS.end(),
-    [&](int A, int B) -> bool {
-        return rm_success_sizes_count[A] > rm_success_sizes_count[B];
-    });
+    std::iota(orderILS.begin(), orderILS.end(), 0);
+    std::sort(orderILS.begin(), orderILS.end(),
+            [&](int A, int B) -> bool {
+                if (rm_success_sizes_count[A] > rm_success_sizes_count[B]) {
+                    return true;
+                } else if (rm_success_sizes_count[A] == rm_success_sizes_count[B] && A < B) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
     #endif
 }
 #endif

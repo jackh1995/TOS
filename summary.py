@@ -36,7 +36,8 @@ for dir in glob('./out_dir/*'):
         # print(dir.split('/')[-1], end=' ')
         # print(tmp[1], tmp[2])
         print([dir.split('/')[-1], problem_name, problem_len, row1[1], row2[1]])
-        rows.append([dir.split('/')[-1], problem_name, problem_len, row1[1], row2[1]])
+        # rows.append([dir.split('/')[-1], problem_name, problem_len, row1[1], row2[1]])
+        rows.append([dir.split('/')[-1], problem_name, problem_len, row1[0], row2[0], row1[1], row2[1], row1[4], row2[4], row1[5], row2[5]])
 
 
 with open('summary.csv', 'w') as f:
@@ -44,5 +45,5 @@ with open('summary.csv', 'w') as f:
     # using csv.writer method from CSV package
     write = csv.writer(f)
       
-    write.writerow(['GA', 'Problem', 'ell', 'NFE_mean', 'NFE_std'])
+    write.writerow(['GA', 'Problem', 'ell', 'NFE_mean', 'NFE_std', 'RM_mean', 'RM_std', 'BM_mean', 'BM_std'])
     write.writerows(rows)
