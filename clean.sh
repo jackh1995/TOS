@@ -1,14 +1,9 @@
-DIR="out_dir/FFF"
-rm $DIR/1_200_-*.csv
-rm $DIR/10_200_-*.csv
-rm $DIR/11_150_-*.csv
-
-DIR="out_dir/TFF_MEAN"
-rm $DIR/1_200_-*.csv
-rm $DIR/10_200_-*.csv
-rm $DIR/11_150_-*.csv
+DIR="out_dir/FTF_CE"
+rm $DIR/1_400_-*.csv
+rm $DIR/2_480_-*.csv
+rm $DIR/3_400_-*.csv
 
 DIR="out_dir/FTF_CG"
-rm $DIR/1_200_-*.csv
-rm $DIR/10_200_-*.csv
-rm $DIR/11_150_-*.csv
+rm $DIR/1_400_-*.csv
+rm $DIR/2_480_-*.csv
+rm $DIR/3_400_-*.csv
