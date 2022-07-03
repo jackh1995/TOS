@@ -17,7 +17,8 @@ id2problem = {
     '12': 'four_five_six',
     '13': 'three_four_five_six_seven',
     '14': 'ftrap4',
-    '15': 'ftrap6'
+    '15': 'ftrap6',
+    '18': 'tianliyuftrap'
 }
 
 rows = []

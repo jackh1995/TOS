@@ -29,7 +29,7 @@ TLIB = -lm
 #                                STEP 1 SUFFFIX                                #
 # ---------------------------------------------------------------------------- #
 
-.SUFFIXES: .cpp .otttmeancgs .otffmean .oftfcg
+.SUFFIXES: .cpp .otttmeancgs .otffmean .offts .oftfcg
 # .otttmeancgs
 
 # -------------------------------- STEP 1 ENDS ------------------------------- #
@@ -94,7 +94,7 @@ SRC_Zobrist = genZobrist.cpp
 #                                  STEP 3 OBJ                                  #
 # ---------------------------------------------------------------------------- #
 
-OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S) $(OBJ_FTF_CG) $(OBJ_TFF_MEAN)
+OBJ = $(addsuffix .o, $(basename $(SRC))) $(OBJ_TTT_MEAN_CG_S) $(OBJ_FTF_CG) $(OBJ_TFF_MEAN) $(OBJ_FFT_S)
 
 # -------------------------------- STEP 3 ENDS ------------------------------- #
 
@@ -109,7 +109,7 @@ OBJ_O = $(addsuffix .o, $(basename $(SRC_FLAG)))
 # ---------------------------------------------------------------------------- #
 
 # all: DSMGA2 TTT_MEAN_CG_S genZobrist  # sweep
-all: DSMGA2 TFF_MEAN FTF_CG genZobrist  # sweep
+all: DSMGA2 TFF_MEAN FTF_CG FFT_S genZobrist  # sweep
 # all: DSMGA2 TFF_MEAN genZobrist  # sweep
 # all: FTF_CG genZobrist  # sweep
 

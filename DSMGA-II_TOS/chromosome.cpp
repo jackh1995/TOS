@@ -10,6 +10,8 @@
 #include <bitset>
 #include "dsmga2.h"
 #include <cmath>
+#include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -264,6 +266,9 @@ double Chromosome::getMaxFitness () const {
         case bigftrap:
             maxF = 1.0;
             break;
+        case tianliyuftrap: // ell = 180 only -> maxF = 30 + 30 = 60
+            maxF = 60;
+            break;
         default: 
             maxF = INF;
     }
@@ -395,6 +400,9 @@ double Chromosome::evaluate(int& counter) {
             break;
         case bigftrap:
             accum = bigftrap_fitness();
+            break;
+        case tianliyuftrap:
+            accum = tianliyuftrap_fitness();
             break;
         default:
             accum = mkTrap(1, 0.8);
@@ -766,6 +774,72 @@ double Chromosome::ftrap6_fitness() const {
     } else { // result3 >= result && result3 >= result2
         return result3;
     }
+}
+
+double Chromosome::tianliyuftrap_fitness () const {
+    
+    double f1 = 0.0;
+    double f2 = 0.0;
+    double result = 0.0;
+
+    string temp_str(30, '0');
+    
+    for (int i=0; i<length/6; ++i) {
+
+        int u=0;
+
+        for (int j=0; j<6; ++j)
+            u += getVal(i*6+j);
+
+        if (u==0)
+            f1 += 1.0;
+        else if (u==1)
+            f1 += 0.0;
+        else if (u==2)
+            f1 += 0.4;
+        else if (u==3)
+            f1 += 0.8;
+        else if (u==4)
+            f1 += 0.4;
+        else if (u==5)
+            f1 += 0.0;
+        else // u == 6
+            f1 += 1.0;
+
+        if (u == 0) {
+            temp_str[i] = '0';
+        } else if (u == 6) {
+            temp_str[i] = '1';
+        } else {
+            temp_str[i] = '-';
+        }
+    }
+
+    // cout << temp_str << endl;
+
+    string opt_111 = "111111111111111111111111111111";
+    string opt_001 = "000000000000000000001111111111";
+    string opt_010 = "000000000011111111110000000000";
+    string opt_100 = "111111111100000000000000000000";
+
+    string str_list[4] = {opt_111, opt_001, opt_010, opt_100};
+    vector<int> sim_vec;
+
+    for (int k=0; k!=4; ++k) {
+        int sim = 0;
+        for (int i=0; i!=30; ++i) {
+            if (temp_str[i] == str_list[k][i]) {
+                sim += 1;
+            }
+        }
+
+        sim_vec.push_back(sim);
+    }
+
+    f2 = *max_element(sim_vec.begin(), sim_vec.end());
+
+    result = f1 + f2;
+    return result;
 }
 
 double Chromosome::spinGlass () const {

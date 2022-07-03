@@ -715,6 +715,7 @@ bool DSMGA2::restrictedMixing(Chromosome &ch, vector<int> &mask) {
     trial = ch;
     
     // the mask has passed the donor check
+    cout << "[" <<  mask.size() << "] ";
     for (size_t idx = 0; idx != mask.size(); ++idx) {
         
         size_t ub;
@@ -723,7 +724,13 @@ bool DSMGA2::restrictedMixing(Chromosome &ch, vector<int> &mask) {
         #else
         ub = idx + 1;
         #endif
-        // cout << ub << '/';
+        cout << ub << '/';
+        // NOTE analze ordering
+        /* ---------------------------------- start --------------------------------- */
+        // if (idx == 0) {
+        //     cout << ub << " ";
+        // }
+        /* ----------------------------------- end ---------------------------------- */
 
         #ifdef ORDERING
         if (ub > mask.size()) {
@@ -779,7 +786,7 @@ bool DSMGA2::restrictedMixing(Chromosome &ch, vector<int> &mask) {
         }
     }
     
-    // cout << "____";
+    cout << "____";
 
     // print rm status
     if (verbose == RM)
@@ -886,7 +893,9 @@ void DSMGA2::restrictedMixing(Chromosome &ch) {
     
     if (taken) {
 
-        /* ---------------------------------- BEGIN --------------------------------- */
+        // NOTE analyze trimming
+        /* ---------------------------------- start --------------------------------- */
+        /*
         if (rm_queue.size() == RM_QUEUE_SIZE) {
             rm_queue.pop_front();
             rm_queue.push_back(mask.size());
@@ -903,7 +912,8 @@ void DSMGA2::restrictedMixing(Chromosome &ch) {
         outfile.open("../" + GA + "_" + "RmMaskSizes.txt", std::ios_base::app);
         outfile << RM_MEAN << ' '; 
         outfile.close();
-        /* ----------------------------------- END ---------------------------------- */
+        */
+        /* ----------------------------------- end ---------------------------------- */
 
         Chromosome::bmeq=0;
         Chromosome::bmgt=0;

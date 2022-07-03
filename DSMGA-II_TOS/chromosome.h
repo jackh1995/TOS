@@ -31,7 +31,8 @@ public:
         ftrap4=14,
         ftrap6=15,
         zeroonemax=16,
-        bigftrap=17
+        bigftrap=17,
+        tianliyu_ftrap=18
     } function;
 
     // static variables
@@ -107,6 +108,7 @@ public:
     double ftrap6_fitness() const;
     double zeroonemax_fitness () const;
     double bigftrap_fitness () const;
+    double tianliyuftrap_fitness () const;
 
     // comparison operators
     bool operator== (const Chromosome & c) const;
